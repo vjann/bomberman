@@ -10,7 +10,6 @@ public class Bman extends JPanel{
   protected static int units = 13;//each square is a units
   protected static int unitSize = 50;//size of each square
   protected static int[][] boxes; //breakable boxes
-  public static BmanBombs[] bombs = new BmanBombs[6];
   public static BmanPlayers playerOne = new BmanPlayers();
   public static BmanPlayers playerTwo = new BmanPlayers();
 
@@ -157,24 +156,6 @@ public class Bman extends JPanel{
       }
     }
     repaint();
-  }
-  // public static void bomb(BmanPlayers player, int xpos, int ypos){
-  //   new Thread() {
-	// 		@Override public void run() {
-  //       BmanPlayers.changeBombs(player, -1);
-	// 			try {
-	// 				Thread.sleep(3000);
-	// 				System.out.println("bomb");
-	// 			} catch ( InterruptedException e ) {}
-  //       BmanPlayers.changeBombs(player, +1);
-	// 		}
-	// 	}.start();
-  // }
-  public void drawBomb(Graphics g){
-    for(BmanBombs b : bombs){
-
-    }
-
   }
   public void paintComponent(Graphics g){
     int color;
