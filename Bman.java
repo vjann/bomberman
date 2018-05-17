@@ -6,32 +6,57 @@ import java.awt.event.KeyListener;
 
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for set obstacle (gray),
-  //1 for pathway for movement (black), and 2 for breakble obstacles (brown)
+  //1 for pathway for movement (black), and 2 for breakble obstacles (brown), 3 for bomb P1, 4 for bomb P2
   protected static int units = 13;//each square is a units
   protected static int unitSize = 50;//size of each square
   protected static int[][] boxes; //breakable boxes
+  public static BmanBombs[] bombs = new BmanBombs[6];
   public static BmanPlayers playerOne = new BmanPlayers();
   public static BmanPlayers playerTwo = new BmanPlayers();
 
   public Bman(){
 
   }
-  public void drawAll(Graphics g){
+  public void drawAll(Graphics f){
     // player one (pink)
-    g.setColor(Color.pink);
-    g.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
+    f.setColor(Color.pink);
+    f.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
     // player two (blue)
-    g.setColor(Color.blue);
-    g.fillOval(unitSize*BmanPlayers.getxPos(playerTwo) + unitSize/4, unitSize*BmanPlayers.getyPos(playerTwo) + unitSize/4, 25, 25);
+    f.setColor(Color.blue);
+    f.fillOval(unitSize*BmanPlayers.getxPos(playerTwo) + unitSize/4, unitSize*BmanPlayers.getyPos(playerTwo) + unitSize/4, 25, 25);
+    //bombs
+    f.setColor(Color.WHITE);
+
+    for(int i = 0; i < units; i ++){
+      for(int j = 0; j <units; j ++){
+        if(well[i][j] == 3){
+          f.setColor(Color.PINK);
+          f.fillOval(unitSize*i, unitSize*j, 10, 10);
+        }
+        else if(well[i][j] == 4){
+          f.setColor(Color.blue);
+          f.fillOval(unitSize*i, unitSize*j, 10, 10);
+        }
+      }
+    }
+
+    // for(int i = 0; i < 6; i++){
+    //   if(bombs[i] == null){
+    //     continue;
+    //   }
+    //   if(BmanBombs.stillExists(bombs[i])){
+    //     g.fillOval(unitSize*BmanBombs.getxPos(bombs[i]) + unitSize/3, unitSize*BmanBombs.getyPos(bombs[i]) + unitSize/3, 10, 10);
+    //   }
+    // }
   }
   public static void main(String[] args){
-    JFrame test = new JFrame("Hi");//title in window bar
+    JFrame test = new JFrame("BomberMan!");//title in window bar
     test.setSize(units*unitSize + 10, units*unitSize + 10);//size of whole frame, which is # of squares times its size
     test.setVisible(true);
     Bman game = new Bman();
     test.add(game);
-    BmanPlayers.setPos(playerOne, 1, 1);
-    BmanPlayers.setPos(playerTwo, units - 2, units - 2);
+    BmanPlayers.setPos(playerOne, units - 2, units - 2);
+    BmanPlayers.setPos(playerTwo, 1, 1);
     game.init();
 
     // BmanPlayers playerTwo = new BmanPlayers;
@@ -61,8 +86,21 @@ public class Bman extends JPanel{
           game.repaint();
         }
         else if(e.getKeyCode() == KeyEvent.VK_SPACE && BmanPlayers.getBombs(playerOne) > 0){
-          bomb(playerOne, p1x, p1y);
-          game.repaint();
+          new Thread() {
+            @Override public void run() {
+              try {
+                if(well[p1x][p1y] == 1 && BmanPlayers.getBombs(playerOne) > 0){
+                  well[p1x][p1y] = 3;
+                  BmanPlayers.changeBombs(playerOne, -1);
+                  game.repaint();
+                  Thread.sleep(3000);
+                  well[p1x][p1y] = 1;
+                  BmanPlayers.changeBombs(playerOne, +1);
+                  game.repaint();
+                }
+              } catch ( InterruptedException e ) {}
+            }
+          }.start();
         }
 
           // player two (WASD)
@@ -83,8 +121,21 @@ public class Bman extends JPanel{
           game.repaint();
         }
         else if(e.getKeyCode() == KeyEvent.VK_T && BmanPlayers.getBombs(playerTwo) > 0){
-          bomb(playerTwo, p2x, p2y);
-          game.repaint();
+          new Thread() {
+            @Override public void run() {
+              try {
+                if(well[p2x][p2y] == 1 && BmanPlayers.getBombs(playerTwo) > 0){
+                  well[p2x][p2y] = 4;
+                  BmanPlayers.changeBombs(playerTwo, -1);
+                  game.repaint();
+                  Thread.sleep(3000);
+                  well[p2x][p2y] = 1;
+                  BmanPlayers.changeBombs(playerTwo, +1);
+                  game.repaint();
+                }
+              } catch ( InterruptedException e ) {}
+            }
+          }.start();
         }
 		  }
 			public void keyReleased(KeyEvent e) {
@@ -92,12 +143,13 @@ public class Bman extends JPanel{
 		});
   }
   public void init(){//initialize game,
+    System.out.println("init");
     well = new int[units][units];
     //fills well with black, with gray on border and with the pattern, brown for breakable boxes
     for(int i = 0; i < units; i ++){
       for(int j = 0; j < units; j ++){
         if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
-          well[i][j] = 0;
+          well[i][j] = 5;
         }
         else{
           well[i][j] = 1;
@@ -106,33 +158,41 @@ public class Bman extends JPanel{
     }
     repaint();
   }
-  public static void bomb(BmanPlayers player, int xpos, int ypos){
-    new Thread() {
-			@Override public void run() {
-        BmanPlayers.changeBombs(player, -1);
-				try {
-					Thread.sleep(3000);
-					System.out.println("bomb");
-				} catch ( InterruptedException e ) {}
-        BmanPlayers.changeBombs(player, +1);
-			}
-		}.start();
+  // public static void bomb(BmanPlayers player, int xpos, int ypos){
+  //   new Thread() {
+	// 		@Override public void run() {
+  //       BmanPlayers.changeBombs(player, -1);
+	// 			try {
+	// 				Thread.sleep(3000);
+	// 				System.out.println("bomb");
+	// 			} catch ( InterruptedException e ) {}
+  //       BmanPlayers.changeBombs(player, +1);
+	// 		}
+	// 	}.start();
+  // }
+  public void drawBomb(Graphics g){
+    for(BmanBombs b : bombs){
+
+    }
+
   }
   public void paintComponent(Graphics g){
     int color;
     for (int i = 0; i < units; i++) {
       for (int j = 0; j < units; j++) {
         color = well[i][j];
-        if(color == 0){
-          g.setColor(Color.gray);
-        }
-        else if(color == 1){
+        System.out.println(color);
+        if(color == 1){
           g.setColor(Color.black);
         }
-        else if(color == 3){
+        else if(color == 5){
+          g.setColor(Color.darkGray);
+        }
+        else if(color == 2){
           g.setColor(new Color(102, 51, 0));
         }
         g.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
+        g.setColor(Color.black);
       }
     }
     drawAll(g);
