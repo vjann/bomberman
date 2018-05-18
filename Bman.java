@@ -36,7 +36,7 @@ public class Bman extends JPanel{
         int p1x = BmanPlayers.getxPos(playerOne);
         int p1y = BmanPlayers.getyPos(playerOne);
         int p2x = BmanPlayers.getxPos(playerTwo);
-        int p2y = BmanPlayers.getyPos(playerTwo);;
+        int p2y = BmanPlayers.getyPos(playerTwo);
         if(e.getKeyCode() == KeyEvent.VK_UP && well[p1x][p1y-1] == 1){
           BmanPlayers.moveY(playerOne, 1);
         }
@@ -57,7 +57,15 @@ public class Bman extends JPanel{
                   well[p1x][p1y] = 3;
                   BmanPlayers.changeBombs(playerOne, -1);
                   game.repaint();
-                  Thread.sleep(3000);
+                  Thread.sleep(3000); // bomb explodes
+                  if (BmanPlayers.getxPos(playerOne) == p1x || BmanPlayers.getyPos(playerOne) == p1y){
+                    playerOne.loseLife();
+                    System.out.println("playerOne -1");
+                  }
+                  if (BmanPlayers.getxPos(playerTwo) == p1x || BmanPlayers.getyPos(playerTwo) == p1y){
+                    playerTwo.loseLife();
+                    System.out.println("playerTwo -1");
+                  }
                   well[p1x][p1y] = 1;
                   BmanPlayers.changeBombs(playerOne, +1);
                   game.repaint();
@@ -92,6 +100,14 @@ public class Bman extends JPanel{
                   BmanPlayers.changeBombs(playerTwo, -1);
                   game.repaint();
                   Thread.sleep(3000);
+                  if (BmanPlayers.getxPos(playerOne) == p2x || BmanPlayers.getyPos(playerOne) == p2y){
+                    playerOne.loseLife();
+                    System.out.println("playerOne -1");
+                  }
+                  if (BmanPlayers.getxPos(playerTwo) == p2x || BmanPlayers.getyPos(playerTwo) == p2y){
+                    playerTwo.loseLife();
+                    System.out.println("playerTwo -1");
+                  }
                   well[p2x][p2y] = 1;
                   BmanPlayers.changeBombs(playerTwo, +1);
                   game.repaint();
