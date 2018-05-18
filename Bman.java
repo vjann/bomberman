@@ -58,14 +58,14 @@ public class Bman extends JPanel{
                   BmanPlayers.changeBombs(playerOne, -1);
                   game.repaint();
                   Thread.sleep(3000); // bomb explodes
-                  if (BmanPlayers.getxPos(playerOne) == p1x || BmanPlayers.getyPos(playerOne) == p1y){
+                  /*
+                  if (checkexplode(playerOne, p1x, p1y, BmanPlayers.getexplodeSize(playerOne))){
                     playerOne.loseLife();
-                    System.out.println("playerOne -1");
                   }
-                  if (BmanPlayers.getxPos(playerTwo) == p1x || BmanPlayers.getyPos(playerTwo) == p1y){
+                  if (checkexplode(playerTwo, p1x, p1y, BmanPlayers.getexplodeSize(playerOne))){
                     playerTwo.loseLife();
-                    System.out.println("playerTwo -1");
                   }
+                  */
                   well[p1x][p1y] = 1;
                   BmanPlayers.changeBombs(playerOne, +1);
                   game.repaint();
@@ -100,14 +100,14 @@ public class Bman extends JPanel{
                   BmanPlayers.changeBombs(playerTwo, -1);
                   game.repaint();
                   Thread.sleep(3000);
-                  if (BmanPlayers.getxPos(playerOne) == p2x || BmanPlayers.getyPos(playerOne) == p2y){
+                  /*
+                  if (Math.abs(checkexplode(playerOne, p2x, p2y, BmanPlayers.getexplodeSize(playerTwo))){
                     playerOne.loseLife();
-                    System.out.println("playerOne -1");
                   }
-                  if (BmanPlayers.getxPos(playerTwo) == p2x || BmanPlayers.getyPos(playerTwo) == p2y){
+                  if (Math.abs(checkexplode(playerTwo, p2x, p2y, BmanPlayers.getexplodeSize(playerTwo))){
                     playerTwo.loseLife();
-                    System.out.println("playerTwo -1");
                   }
+                  */
                   well[p2x][p2y] = 1;
                   BmanPlayers.changeBombs(playerTwo, +1);
                   game.repaint();
@@ -126,6 +126,11 @@ public class Bman extends JPanel{
 		});
   }
   
+  public static boolean checkexplode(BmanPlayers player, int x, int y, int e){
+    // check if bomb hits the player
+
+  }
+
   public void init(){//initialize game,
     System.out.println("init");
     well = new int[units][units];
