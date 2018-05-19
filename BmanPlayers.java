@@ -9,7 +9,7 @@ public class BmanPlayers{
     yPos = 0;
     lives = 3;
     bombs = 3;
-    explodeSize = 3;
+    explodeSize = 5;
   }
   public static void setPos(BmanPlayers player, int x, int y){
     player.xPos = x;
@@ -30,8 +30,8 @@ public class BmanPlayers{
   public static int getyPos(BmanPlayers player){
     return player.yPos;
   }
-  public int getLives(){
-    return this.lives;
+  public static int getLives(BmanPlayers player){
+    return player.lives;
   }
   public static int getBombs(BmanPlayers player){
     return player.bombs;
@@ -45,8 +45,8 @@ public class BmanPlayers{
   public static void moveY(BmanPlayers player, int y){
     player.yPos -= y;
   }
-  public void loseLife(){
-    lives -=1;
+  public static void loseLife(BmanPlayers player){
+    player.lives -=1;
   }
   public static void changeBombs(BmanPlayers player, int a){
     player.bombs += a;
