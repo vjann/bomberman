@@ -162,7 +162,7 @@ public class Bman extends JPanel{
     //BUG: bomb ray does not include bombs origin
     for(int i = 0 ; i < e; i++){
       //if well is wall (2), explosion stops
-      //if well is destroyable obstacle (0), explosion destroys it
+      //if well is destroyable obstacle (0), explosion destroys it and obstacle stops explosion
       if(well[x][y+i] == 0 || well[x][y+i] == 2){
         if(well[x][y+i] == 0){
           well[x][y+i] = exp;
@@ -257,7 +257,23 @@ public class Bman extends JPanel{
       repaint();
     }
   public void paintComponent(Graphics g){
-    //paints background corresponding key in 'well' matrix, then calls other draw functions
+    //sets up icons and images of players, bombs, maybe bombrays
+    BufferedImage pyr1 = null;
+    BufferedImage pyr2 = null;
+    BufferedImage redb = null;
+    BufferedImage blueb = null;
+
+    Color transPink = new Color(255, 192, 203, 160);
+    Color transBlue = new Color(0, 0, 255, 160);
+
+    try {
+      // pyr1 = ImageIO.read(new File("pyr1.png"));
+      // pyr2 = ImageIO.read(new File("pyr2.png"));
+      redb = ImageIO.read(new File("redbomb.png"));
+      blueb = ImageIO.read(new File("bluebomb.png"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     int color;
     for (int i = 0; i < units; i++) {
       for (int j = 0; j < units; j++) {
@@ -275,64 +291,90 @@ public class Bman extends JPanel{
           g.setColor(Color.darkGray);
         }
         g.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
-        g.setColor(Color.black);
-      }
-    }
-    //redirects to paint non-background
-    drawAll(g);
-  }
-
-  //paints over background drawn by paintComponent
-  public void drawAll(Graphics f){
-    //sets up icons and images of players, bombs, maybe bombrays
-    BufferedImage pyr1 = null;
-    BufferedImage pyr2 = null;
-    BufferedImage redb = null;
-    BufferedImage blueb = null;
-    try {
-      // pyr1 = ImageIO.read(new File("pyr1.png"));
-      // pyr2 = ImageIO.read(new File("pyr2.png"));
-      redb = ImageIO.read(new File("redbomb.png"));
-      blueb = ImageIO.read(new File("bluebomb.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    // player one (pink)
-    f.setColor(Color.pink);
-    f.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
-    // player two (blue)
-    f.setColor(Color.blue);
-    f.fillOval(unitSize*BmanPlayers.getxPos(playerTwo) + unitSize/4, unitSize*BmanPlayers.getyPos(playerTwo) + unitSize/4, 25, 25);
-    //bombs and bomb rays: check each entry in well, painting corresponding
-    int color;
-    for(int i = 0; i < units; i ++){
-      for(int j = 0; j <units; j ++){
-        color = well[i][j];
-        Color transPink = new Color(255, 192, 203, 160);
-        Color transBlue = new Color(0, 0, 255, 160);
-        //player one bomb
+        // player one (pink)
+        g.setColor(Color.pink);
+        g.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
+        // player two (blue)
+        g.setColor(Color.blue);
+        g.fillOval(unitSize*BmanPlayers.getxPos(playerTwo) + unitSize/4, unitSize*BmanPlayers.getyPos(playerTwo) + unitSize/4, 25, 25);
+        //redirects to paint non-background
         if(color == 3){
-          f.setColor(transPink);
-          f.drawImage(redb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
+          g.drawImage(redb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
         }
         //player two bomb
         else if(color == 4){
-          f.setColor(transBlue);
-          f.drawImage(blueb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
+          g.drawImage(blueb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
         }
         // player one bomb ray
         else if(color == 5){
-          f.setColor(transPink);
-          f.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
+          g.setColor(transPink);
+          g.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
         }
         // player two bomb ray
         else if(color == 6){
-          f.setColor(transBlue);
-          f.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
+          g.setColor(transBlue);
+          g.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
         }
+        g.setColor(Color.black);
       }
     }
+
+    // drawAll(g);
   }
+  //paints over background drawn by paintComponent
+
+
+  // public void drawAll(Graphics f){
+  //   //sets up icons and images of players, bombs, maybe bombrays
+  //   BufferedImage pyr1 = null;
+  //   BufferedImage pyr2 = null;
+  //   BufferedImage redb = null;
+  //   BufferedImage blueb = null;
+  //   try {
+  //     // pyr1 = ImageIO.read(new File("pyr1.png"));
+  //     // pyr2 = ImageIO.read(new File("pyr2.png"));
+  //     redb = ImageIO.read(new File("redbomb.png"));
+  //     blueb = ImageIO.read(new File("bluebomb.png"));
+  //   } catch (IOException e) {
+  //     e.printStackTrace();
+  //   }
+  //   // player one (pink)
+  //   f.setColor(Color.pink);
+  //   f.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
+  //   // player two (blue)
+  //   f.setColor(Color.blue);
+  //   f.fillOval(unitSize*BmanPlayers.getxPos(playerTwo) + unitSize/4, unitSize*BmanPlayers.getyPos(playerTwo) + unitSize/4, 25, 25);
+  //   //bombs and bomb rays: check each entry in well, painting corresponding
+  //   int color;
+  //   for(int i = 0; i < units; i ++){
+  //     for(int j = 0; j <units; j ++){
+  //       color = well[i][j];
+  //       Color transPink = new Color(255, 192, 203, 160);
+  //       Color transBlue = new Color(0, 0, 255, 160);
+  //       //player one bomb
+  //       if(color == 3){
+  //         f.drawImage(redb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
+  //       }
+  //       //player two bomb
+  //       else if(color == 4){
+  //         f.drawImage(blueb,unitSize*i + 5, unitSize*j + 5, unitSize-9, unitSize-9, null);
+  //       }
+  //       // player one bomb ray
+  //       else if(color == 5){
+  //         f.setColor(transPink);
+  //         f.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
+  //       }
+  //       // player two bomb ray
+  //       else if(color == 6){
+  //         f.setColor(transBlue);
+  //         f.fillRect(unitSize*i, unitSize*j, unitSize-1, unitSize-1);
+  //       }
+  //     }
+  //   }
+  // }
+
+
+
   //erases the bomb rays
   public static void bombReset(){
     //goes through entire well, turns bomb rays (5 and 6) to background (1)
