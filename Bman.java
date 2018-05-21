@@ -257,6 +257,14 @@ public class Bman extends JPanel{
       repaint();
     }
   public void paintComponent(Graphics g){
+    if(BmanPlayers.getLives(playerOne) == 0){
+      endGame(g, playerOne);
+      return;
+    }
+    if(BmanPlayers.getLives(playerTwo) == 0){
+      endGame(g, playerTwo);
+      return;
+    }
     //sets up icons and images of players, bombs, maybe bombrays
     BufferedImage pyr1 = null;
     BufferedImage pyr2 = null;
@@ -373,7 +381,20 @@ public class Bman extends JPanel{
   //   }
   // }
 
-
+  public void endGame(Graphics g, BmanPlayers player){
+    Font myFont = new Font("Serif", Font.BOLD, 50);
+    g.setColor(Color.RED);
+    g.setFont(myFont);
+    g.drawString("Game Over",(int) (units*unitSize*0.15), (int) (units*unitSize*0.25));
+    String winner = "";
+    if(player == playerOne){
+      winner += "Player One Wins";
+    }
+    else{
+      winner += "Player Two Wins";
+    }
+    g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
+  }
 
   //erases the bomb rays
   public static void bombReset(){
