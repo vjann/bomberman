@@ -4,12 +4,14 @@ public class BmanPlayers{
   protected int lives;
   protected int bombs;
   protected int explodeSize;
+  protected int maxBombs;
   public BmanPlayers(){
     xPos = 0;
     yPos = 0;
     lives = 3;
     bombs = 3;
     explodeSize = 5;
+    maxBombs = 3;
   }
   public static void setPos(BmanPlayers player, int x, int y){
     player.xPos = x;
@@ -18,8 +20,8 @@ public class BmanPlayers{
   public static void setLives(BmanPlayers player, int l){
     player.lives = l;
   }
-  public static void setBombs(BmanPlayers player, int b){
-    player.bombs = b;
+  public static void addBombs(BmanPlayers player){
+    player.bombs++;
   }
   public static void setexplodeSize(BmanPlayers player, int x){
     player.explodeSize += x;
@@ -50,5 +52,11 @@ public class BmanPlayers{
   }
   public static void changeBombs(BmanPlayers player, int a){
     player.bombs += a;
+  }
+  public static int getMaxBombs(BmanPlayers player){
+    return player.maxBombs;
+  }
+  public static void addMaxBombs(BmanPlayers player){
+    player.maxBombs ++;
   }
 }
