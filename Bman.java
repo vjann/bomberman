@@ -22,7 +22,7 @@ public class Bman extends JPanel{
 
   public static void main(String[] args){
     JFrame test = new JFrame("BomberMan!");//title in window bar
-    test.setSize(units*unitSize + 10, units*unitSize + 10);//size of whole frame, which is # of squares times its size
+    test.setSize(units*unitSize + 1, units*unitSize + 50);//size of whole frame, which is # of squares times its size
     test.setVisible(true);
     Bman game = new Bman();
     test.add(game);
@@ -86,7 +86,7 @@ public class Bman extends JPanel{
                   BmanPlayers.changeBombs(playerOne, +1);
                   game.repaint();
                   //explosion 'rays' disappear
-                  Thread.sleep(300);
+                  Thread.sleep(1000);
                   bombReset();
                   game.repaint();
                 }
@@ -143,6 +143,9 @@ public class Bman extends JPanel{
 			public void keyReleased(KeyEvent e) {
 			}
 		});
+    // if(BmanPlayers.getLives(playerOne) == 0 || BmanPlayers.getLives(playerTwo) == 0){
+    //   return;
+    // }
   }
 
   public void explode(BmanPlayers player, int x, int y, int e){
@@ -257,17 +260,11 @@ public class Bman extends JPanel{
       repaint();
     }
   public void paintComponent(Graphics g){
-    if(BmanPlayers.getLives(playerOne) == 0){
-      endGame(g, playerOne);
-      return;
-    }
-    if(BmanPlayers.getLives(playerTwo) == 0){
-      endGame(g, playerTwo);
-      return;
-    }
     //sets up icons and images of players, bombs, maybe bombrays
     BufferedImage pyr1 = null;
     BufferedImage pyr2 = null;
+    BufferedImage p1Lives = null;
+    BufferedImage p2Lives = null;
     BufferedImage redb = null;
     BufferedImage blueb = null;
 
@@ -279,6 +276,8 @@ public class Bman extends JPanel{
       // pyr2 = ImageIO.read(new File("pyr2.png"));
       redb = ImageIO.read(new File("redbomb.png"));
       blueb = ImageIO.read(new File("bluebomb.png"));
+      p1Lives = ImageIO.read(new File("playerlives.jpg"));
+      p2Lives = ImageIO.read(new File("playerlives.jpg"));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -326,8 +325,28 @@ public class Bman extends JPanel{
         g.setColor(Color.black);
       }
     }
+    g.fillRect(0, units*unitSize, units*unitSize, 50);
+    for(int i = 0; i < BmanPlayers.getLives(playerOne); i ++){
+      g.drawImage(p1Lives, unitSize*i, units*unitSize, unitSize, unitSize, null);
+    }
+    for(int i = 0; i < BmanPlayers.getLives(playerTwo); i ++){
+      g.drawImage(p1Lives, unitSize*(units - i - 1), units*unitSize, unitSize, unitSize, null);
+    }
+    for(int i = 0; i < BmanPlayers.getBombs(playerTwo); i ++){
+      g.drawImage(p1Lives, unitSize*(units - i - 1), units*unitSize, unitSize, unitSize, null);
+    }
+    for(int i = 0; i < BmanPlayers.getLives(playerOne); i ++){
+      g.drawImage(p1Lives, unitSize*(units - i - 1), units*unitSize, unitSize, unitSize, null);
+    }
 
-    // drawAll(g);
+    if(BmanPlayers.getLives(playerOne) == 0){
+      endGame(g, playerOne);
+      return;
+    }
+    else if(BmanPlayers.getLives(playerTwo) == 0){
+      endGame(g, playerTwo);
+      return;
+    }
   }
   //paints over background drawn by paintComponent
 
@@ -394,6 +413,7 @@ public class Bman extends JPanel{
       winner += "Player Two Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
+    return;
   }
 
   //erases the bomb rays
