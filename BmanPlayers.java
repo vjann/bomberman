@@ -10,7 +10,7 @@ public class BmanPlayers{
     yPos = 0;
     lives = 3;
     bombs = 3;
-    explodeSize = 5;
+    explodeSize = 3;
     maxBombs = 3;
   }
   public static void setPos(BmanPlayers player, int x, int y){
@@ -23,7 +23,7 @@ public class BmanPlayers{
   public static void addBombs(BmanPlayers player){
     player.bombs++;
   }
-  public static void setexplodeSize(BmanPlayers player, int x){
+  public static void addExplodeSize(BmanPlayers player, int x){
     player.explodeSize += x;
   }
   public static int getxPos(BmanPlayers player){

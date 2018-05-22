@@ -135,10 +135,13 @@ public class Bman extends JPanel{
       return;
     }
   }
-  public static int RNG(){
+  public static int RNGESUS(){
     int roll = (int)(100*Math.random());
     if(roll < 20){
       return 7;
+    }
+    else if (roll < 40){
+      return 8;
     }
     else{
       return 1;
@@ -164,7 +167,7 @@ public class Bman extends JPanel{
       //if well is destroyable obstacle (0), explosion destroys it and obstacle stops explosion
       if(well[x][y+i] == 0 || well[x][y+i] == 2){
         if(well[x][y+i] == 0){
-          well[x][y+i] = RNG();
+          well[x][y+i] = RNGESUS();
         }
         break;
       }
@@ -181,7 +184,7 @@ public class Bman extends JPanel{
     for(int j = 1; j < e; j++){
       if(well[x][y-j] == 0 || well[x][y-j] == 2){
         if(well[x][y-j] == 0){
-          well[x][y-j] = RNG();
+          well[x][y-j] = RNGESUS();
         }
         break;
       }
@@ -196,7 +199,7 @@ public class Bman extends JPanel{
     for(int k = 1; k < e; k++){
       if(well[x+k][y] == 0 || well[x+k][y] == 2){
         if(well[x+k][y] == 0){
-          well[x+k][y] = RNG();
+          well[x+k][y] = RNGESUS();
         }
         break;
       }
@@ -211,7 +214,7 @@ public class Bman extends JPanel{
     for(int l = 1; l < e; l++){
       if(well[x-l][y] == 0 || well[x-l][y] == 2){
         if(well[x-l][y] == 0){
-          well[x-l][y] = RNG();
+          well[x-l][y] = RNGESUS();
         }
         break;
       }
@@ -233,6 +236,10 @@ public class Bman extends JPanel{
     }
     else if(well[xPos][yPos] == 7 && BmanPlayers.getMaxBombs(player) <=7){
       BmanPlayers.addBombs(player);
+      well[xPos][yPos] = 1;
+    }
+    else if(well[xPos][yPos] == 8 && BmanPlayers.getexplodeSize(player) <=7){
+      BmanPlayers.addExplodeSize(player, 1);
       well[xPos][yPos] = 1;
     }
   }
@@ -311,6 +318,10 @@ public class Bman extends JPanel{
           g.setColor(Color.green);
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
         }
+        else if(color == 8){
+          g.setColor(Color.red);
+          g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
+        }
         // player one (pink)
         g.setColor(Color.pink);
         g.fillOval(unitSize*BmanPlayers.getxPos(playerOne) + unitSize/4+50, unitSize*BmanPlayers.getyPos(playerOne) + unitSize/4, 25, 25);
@@ -370,10 +381,10 @@ public class Bman extends JPanel{
     g.drawString("Game Over",(int) (units*unitSize*0.15), (int) (units*unitSize*0.25));
     String winner = "";
     if(player == playerOne){
-      winner += "Player One Wins";
+      winner += "Blue Wins";
     }
     else{
-      winner += "Player Two Wins";
+      winner += "Pink Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
     return;
