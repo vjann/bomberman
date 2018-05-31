@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.*;
 
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for breakable boxes, 1 for pathway for movement (black),
@@ -21,6 +22,25 @@ public class Bman extends JPanel{
   public double random;     //CHANGED
 
   public static void main(String[] args){
+
+    try {
+            // Set cross-platform Java L&F (also called "Metal")
+        UIManager.setLookAndFeel(
+            UIManager.getCrossPlatformLookAndFeelClassName());
+    } 
+    catch (UnsupportedLookAndFeelException e) {
+       // handle exception
+    }
+    catch (ClassNotFoundException e) {
+       // handle exception
+    }
+    catch (InstantiationException e) {
+       // handle exception
+    }
+    catch (IllegalAccessException e) {
+       // handle exception
+    }
+
     JFrame test = new JFrame("BomberMan!");//title in window bar
     test.setSize((units+2)*unitSize, units*unitSize);//size of whole frame, which is # of squares times its size
     test.setVisible(true);
