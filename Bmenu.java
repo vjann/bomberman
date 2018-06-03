@@ -30,7 +30,7 @@ public class Bmenu extends Bman{
 
     JButton startButton = new JButton("start");
     startButton.setFocusable(false);
-    panel.add(Box.createVerticalStrut(390));
+    panel.add(Box.createVerticalStrut(370));
     startButton.setFont(buttonFont);
     // startButton.setSize(100, 300);
     startButton.setBackground(Color.green);
@@ -56,6 +56,16 @@ public class Bmenu extends Bman{
     quitButton.setForeground(Color.yellow);
     quitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(quitButton);
+
+    JButton characterButton = new JButton("character");
+    characterButton.setFocusable(false);
+    panel.add(Box.createVerticalStrut(5));
+    characterButton.setFont(buttonFont);
+    characterButton.setBackground(Color.green);
+    characterButton.setForeground(Color.yellow);
+    characterButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
+    panel.add(characterButton);
+
     panel.setVisible(true);
     con.add(panel);
     // frame.add(startButton, BorderLayout.NORTH);
@@ -88,6 +98,15 @@ public class Bmenu extends Bman{
       @Override
       public void actionPerformed(ActionEvent arg0) {
         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+      }
+    });
+    characterButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        panel.setBackground(Color.white);
+        panel.setVisible(false);
+        BmanCharacter bmc = new BmanCharacter();
+        bmc.characterMenu();
       }
     });
 
