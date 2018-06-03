@@ -131,6 +131,20 @@ public class Bman extends JPanel{
             }
           }.start();
         }
+        else if(e.getKeyCode() == KeyEvent.VK_BACK_SLASH && BmanPlayers.getCanDrop(playerOne)){
+          well[p1x][p1y] = 0;
+          new Thread() {
+            @Override public void run() {
+              try {
+                BmanPlayers.setCanDrop(playerOne, false);
+                Thread.sleep(3000);
+                BmanPlayers.setCanDrop(playerOne, true);
+              }catch(InterruptedException e){
+                e.printStackTrace();
+              }
+            }
+          }.start();
+        }
         game.repaint();
         System.out.println("hi");
 
@@ -174,6 +188,20 @@ public class Bman extends JPanel{
             }
           }.start();
         }
+        else if(e.getKeyCode() == KeyEvent.VK_Y && BmanPlayers.getCanDrop(playerTwo)){
+          well[p2x][p2y] = 0;
+          new Thread() {
+            @Override public void run() {
+              try {
+                BmanPlayers.setCanDrop(playerTwo, false);
+                Thread.sleep(3000);
+                BmanPlayers.setCanDrop(playerTwo, true);
+              }catch(InterruptedException e){
+                e.printStackTrace();
+              }
+            }
+          }.start();
+        }
         game.repaint();
       }
       public void keyReleased(KeyEvent e) {
@@ -193,10 +221,13 @@ public class Bman extends JPanel{
     }
     int roll = (int)(100*Math.random());
     if(roll < 20){
-      return 7;
+      return 7; //add bomb
     }
-    else if (roll < 40){
-      return 8;
+    else if(roll < 40){
+      return 8; //add bomb size
+    }
+    else if(roll< 50){
+      return 9; //add lives
     }
     else{
       return exp;
@@ -228,11 +259,33 @@ public class Bman extends JPanel{
         break;
       }
       //if bomb ray hits players, they lose one life
-      if(x == p1x && y + i == p1y){
+      if(x == p1x && y + i == p1y && !BmanPlayers.getInvincibility(playerOne)){
         BmanPlayers.loseLife(playerOne);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerOne, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerOne, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
-      if(x == p2x && y + i == p2y){
+      if(x == p2x && y + i == p2y && !BmanPlayers.getInvincibility(playerTwo)){
         BmanPlayers.loseLife(playerTwo);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerTwo, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerTwo, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
       well[x][y+i] = exp;
     }
@@ -244,11 +297,33 @@ public class Bman extends JPanel{
         }
         break;
       }
-      if(x == p1x && y - j == p1y){
+      if(x == p1x && y - j == p1y && !BmanPlayers.getInvincibility(playerOne)){
         BmanPlayers.loseLife(playerOne);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerOne, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerOne, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
-      if(x == p2x && y - j == p2y){
+      if(x == p2x && y - j == p2y && !BmanPlayers.getInvincibility(playerTwo)){
         BmanPlayers.loseLife(playerTwo);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerTwo, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerTwo, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
       well[x][y-j] = exp;
     }
@@ -259,11 +334,33 @@ public class Bman extends JPanel{
         }
         break;
       }
-      if(x + k == p1x && y == p1y){
+      if(x + k == p1x && y == p1y && !BmanPlayers.getInvincibility(playerOne)){
         BmanPlayers.loseLife(playerOne);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerOne, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerOne, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
-      if(x + k== p2x && y == p2y){
+      if(x + k== p2x && y == p2y && !BmanPlayers.getInvincibility(playerTwo)){
         BmanPlayers.loseLife(playerTwo);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerTwo, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerTwo, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
       well[x+k][y] = exp;
     }
@@ -274,11 +371,33 @@ public class Bman extends JPanel{
         }
         break;
       }
-      if(x - l == p1x && y== p1y){
+      if(x - l == p1x && y== p1y && !BmanPlayers.getInvincibility(playerOne)){
         BmanPlayers.loseLife(playerOne);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerOne, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerOne, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
-      if(x - l == p2x && y== p2y){
+      if(x - l == p2x && y== p2y && !BmanPlayers.getInvincibility(playerTwo)){
         BmanPlayers.loseLife(playerTwo);
+        new Thread() {
+          @Override public void run() {
+            try {
+              BmanPlayers.setInvinciblility(playerTwo, true);
+              Thread.sleep(1000);
+              BmanPlayers.setInvinciblility(playerTwo, false);
+            }catch(InterruptedException e){
+              e.printStackTrace();
+            }
+          }
+        }.start();
       }
       well[x-l][y] = exp;
     }
@@ -287,7 +406,7 @@ public class Bman extends JPanel{
   }
   public static void nextStep(int xPos, int yPos, BmanPlayers player){
     BmanPlayers.setPos(player, xPos, yPos);
-    if(well[xPos][yPos] == 5 || well[xPos][yPos] == 6){
+    if(!BmanPlayers.getInvincibility(player) && (well[xPos][yPos] == 5 || well[xPos][yPos] == 6)){
       BmanPlayers.loseLife(player);
     }
     else if(well[xPos][yPos] == 7 && BmanPlayers.getMaxBombs(player) <=7){
@@ -296,6 +415,10 @@ public class Bman extends JPanel{
     }
     else if(well[xPos][yPos] == 8 && BmanPlayers.getexplodeSize(player) <=7){
       BmanPlayers.addExplodeSize(player, 1);
+      well[xPos][yPos] = 1;
+    }
+    else if(well[xPos][yPos] == 9 && BmanPlayers.getLives(player) <= 4){
+      BmanPlayers.addLives(player);
       well[xPos][yPos] = 1;
     }
   }
@@ -357,6 +480,9 @@ public class Bman extends JPanel{
         else if(color == 8){
           g.setColor(Color.red);
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
+        }
+        else if(color == 9){
+          g.drawImage(p1Lives, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
         }
         // player one (tyler)
         g.drawImage(pyr1, unitSize*BmanPlayers.getxPos(playerOne) +50, unitSize*BmanPlayers.getyPos(playerOne), 50, 50, null);

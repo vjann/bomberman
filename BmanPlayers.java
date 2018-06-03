@@ -5,6 +5,8 @@ public class BmanPlayers{
   protected int bombs;
   protected int explodeSize;
   protected int maxBombs;
+  protected boolean invincible;
+  protected boolean canDrop;
   public BmanPlayers(){
     xPos = 0;
     yPos = 0;
@@ -12,6 +14,8 @@ public class BmanPlayers{
     bombs = 3;
     explodeSize = 3;
     maxBombs = 3;
+    invincible = false;
+    canDrop = true;
   }
   public static void setPos(BmanPlayers player, int x, int y){
     player.xPos = x;
@@ -19,6 +23,9 @@ public class BmanPlayers{
   }
   public static void setLives(BmanPlayers player, int l){
     player.lives = l;
+  }
+  public static void addLives(BmanPlayers player){
+    player.lives++;
   }
   public static void addBombs(BmanPlayers player){
     player.bombs++;
@@ -58,5 +65,17 @@ public class BmanPlayers{
   }
   public static void addMaxBombs(BmanPlayers player){
     player.maxBombs ++;
+  }
+  public static boolean getInvincibility(BmanPlayers player){
+    return player.invincible;
+  }
+  public static void setInvinciblility(BmanPlayers player, boolean isInvincible){
+    player.invincible = isInvincible;
+  }
+  public static boolean getCanDrop(BmanPlayers player){
+    return player.canDrop;
+  }
+  public static void setCanDrop(BmanPlayers player, boolean bool){
+    player.canDrop = bool;
   }
 }

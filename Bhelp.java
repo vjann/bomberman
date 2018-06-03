@@ -15,7 +15,7 @@ public class Bhelp extends Bman{
     Font myFont = new Font("Times New Roman", Font.PLAIN, 15);
     JPanel helpPanel = new JPanel();
 
-    JLabel controls = new JLabel("<html><pre>Tyler: Arrow Keys to move, ENTER to drop bombs\nKumar: WASD to move, T to drop bombs</pre></html>");
+    JLabel controls = new JLabel("<html><pre>CONTROLS\nTyler: Arrow Keys to move, ENTER to drop bombs, \\ to add obstacle\nKumar: WASD to move, T to drop bombs, Y to add obstacle</pre></html>");
     JLabel instructions = new JLabel("<html><pre>OBJECTIVE: reduce opponent's lives to zero using bombs\nPowerups: increase bomb range, increase max bomb capacity</pre></html>");
     controls.setFont(myFont);
     instructions.setFont(myFont);
