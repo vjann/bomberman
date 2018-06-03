@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.AlphaComposite;
 
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for breakable boxes, 1 for pathway for movement (black),
@@ -64,6 +65,7 @@ public class Bman extends JPanel{
     } catch (IOException e) {
       e.printStackTrace();
     }
+    backgroundMusic();
 
     if(state.equals("MENU")){
       panel = new JPanel();
@@ -74,13 +76,11 @@ public class Bman extends JPanel{
 
   }
   public static void actions(){
-    System.out.println("action");
     //KEYLISTENER
     frame.addKeyListener(new KeyListener() {
       public void keyTyped(KeyEvent e) {
       }
       public void keyPressed(KeyEvent e) {
-        System.out.println("acon");
         int p1x = BmanPlayers.getxPos(playerOne);
         int p1y = BmanPlayers.getyPos(playerOne);
         int p2x = BmanPlayers.getxPos(playerTwo);
@@ -145,7 +145,6 @@ public class Bman extends JPanel{
           }.start();
         }
         game.repaint();
-        System.out.println("hi");
 
         // player two (WASD)
         if(e.getKeyCode() == KeyEvent.VK_W && well[p2x][p2y-1] == 1 || well[p2x][p2y-1] >=5){
@@ -438,22 +437,29 @@ public class Bman extends JPanel{
     if(!BmanPlayers.getInvincibility(player) && (well[xPos][yPos] == 5 || well[xPos][yPos] == 6)){
       BmanPlayers.loseLife(player);
     }
-    else if(well[xPos][yPos] == 7 && BmanPlayers.getMaxBombs(player) <=7){
-      BmanPlayers.addBombs(player);
+    else if(well[xPos][yPos] == 7){
+      if(BmanPlayers.getMaxBombs(player) <=6){
+        BmanPlayers.addMaxBombs(player);
+        BmanPlayers.addBombs(player);
+      }
       well[xPos][yPos] = 1;
     }
-    else if(well[xPos][yPos] == 8 && BmanPlayers.getexplodeSize(player) <=7){
-      BmanPlayers.addExplodeSize(player, 1);
+    else if(well[xPos][yPos] == 8){
+      if(BmanPlayers.getexplodeSize(player) <=6){
+        BmanPlayers.addExplodeSize(player, 1);
+
+      }
       well[xPos][yPos] = 1;
     }
-    else if(well[xPos][yPos] == 9 && BmanPlayers.getLives(player) <= 4){
-      BmanPlayers.addLives(player);
+    else if(well[xPos][yPos] == 9){
+      if(BmanPlayers.getLives(player) <= 4){
+        BmanPlayers.addLives(player);
+      }
       well[xPos][yPos] = 1;
     }
   }
 
   public void init(){//initialize game,       //CHANGED
-      System.out.println("init");
       well = new int[units][units];
       //fills well with black, with gray on border and with the pattern, brown for breakable boxes
       for(int i = 0; i < units; i ++){
@@ -479,7 +485,7 @@ public class Bman extends JPanel{
       repaint();
     }
   public void paintComponent(Graphics g){
-    System.out.println("paint");
+    Graphics2D g2 = (Graphics2D)g;
     //sets up icons and images of players, bombs, maybe bombrays
     g.setColor(Color.white);
     g.fillRect(0, 0, (units+2)*unitSize, units*unitSize);
@@ -572,6 +578,15 @@ public class Bman extends JPanel{
     for(int i = 0; i < BmanPlayers.getBombs(playerOne); i ++){
       g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
     }
+    float alpha = (float) 0.3; //draw half transparent
+    AlphaComposite trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+    g2.setComposite(trans);
+    for(int i = 0; i < BmanPlayers.getMaxBombs(playerTwo); i ++){
+      g.drawImage(blueb, 0, unitSize*(i+5), unitSize, unitSize, null);
+    }
+    for(int i = 0; i < BmanPlayers.getMaxBombs(playerOne); i ++){
+      g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
+    }
     if(BmanPlayers.getLives(playerOne) <= 0){
       state ="END";
       endGame(g, playerOne);
@@ -626,7 +641,23 @@ public class Bman extends JPanel{
       clip.open(stream);
       clip.start();
     }catch(Exception e) {
-      System.out.println("Error with playing sound.");
+      e.printStackTrace();
+    }
+  }
+  public static void backgroundMusic(){
+    File yourFile = new File("smash.wav");
+    AudioInputStream stream;
+    AudioFormat format;
+    DataLine.Info info;
+    Clip clip;
+    try{
+      stream = AudioSystem.getAudioInputStream(yourFile);
+      format = stream.getFormat();
+      info = new DataLine.Info(Clip.class, format);
+      clip = (Clip) AudioSystem.getLine(info);
+      clip.open(stream);
+      clip.start();
+    }catch(Exception e) {
       e.printStackTrace();
     }
   }
