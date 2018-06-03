@@ -29,23 +29,48 @@ public class Bman extends JPanel{
   public static Bman game = new Bman();
   protected static String state = "MENU";
 
-  
+  private static BufferedImage pyr1 = null;
+  private static BufferedImage pyr2 = null;
+  private static BufferedImage p1Lives = null;
+  private static BufferedImage p2Lives = null;
+  private static BufferedImage redb = null;
+  private static BufferedImage blueb = null;
+  private static BufferedImage unbreak = null;
+  private static BufferedImage breakable = null;
+
+  private static Color transPink = new Color(255, 192, 203, 160);
+  private static Color transBlue = new Color(0, 0, 255, 160);
+
+
   public static void main(String[] args){
     frame = new JFrame("BomberMan!");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize((units+2)*unitSize, units*unitSize);//size of whole frame, which is # of squares times its size
     // frame.getContentPane().setBackground(Color.pink);
     // frame.setLayout(null);
-    frame.setVisible(true);
 
     con = frame.getContentPane();
 
     menu = new Bmenu();
 
+    try {
+      pyr1 = ImageIO.read(new File("tyler.png"));
+      pyr2 = ImageIO.read(new File("kumz2.png"));
+      redb = ImageIO.read(new File("redbomb.png"));
+      blueb = ImageIO.read(new File("bluebomb.png"));
+      p1Lives = ImageIO.read(new File("playerlives.jpg"));
+      p2Lives = ImageIO.read(new File("playerlives.jpg"));
+      unbreak = ImageIO.read(new File("unbreakable.png"));
+      breakable = ImageIO.read(new File("breakable.jpg"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     if(state.equals("MENU")){
       panel = new JPanel();
       menu.render();
     }
+    frame.setVisible(true);
 
 
   }
@@ -304,35 +329,15 @@ public class Bman extends JPanel{
   public void paintComponent(Graphics g){
     System.out.println("paint");
     //sets up icons and images of players, bombs, maybe bombrays
-    BufferedImage pyr1 = null;
-    BufferedImage pyr2 = null;
-    BufferedImage p1Lives = null;
-    BufferedImage p2Lives = null;
-    BufferedImage redb = null;
-    BufferedImage blueb = null;
-    BufferedImage unbreak = null;
-
-    Color transPink = new Color(255, 192, 203, 160);
-    Color transBlue = new Color(0, 0, 255, 160);
-    try {
-      pyr1 = ImageIO.read(new File("tyler.png"));
-      pyr2 = ImageIO.read(new File("kumz2.png"));
-      redb = ImageIO.read(new File("redbomb.png"));
-      blueb = ImageIO.read(new File("bluebomb.png"));
-      p1Lives = ImageIO.read(new File("playerlives.jpg"));
-      p2Lives = ImageIO.read(new File("playerlives.jpg"));
-      unbreak = ImageIO.read(new File("unbreakable.png"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    g.setColor(Color.white);
+    g.fillRect(0, 0, (units+2)*unitSize, units*unitSize);
     int color;
     for (int i = 0; i < units; i++) {
       for (int j = 0; j < units; j++) {
         color = well[i][j];
         //destroyable obstacle
         if(color == 0){      //CHANGED
-          g.setColor(new Color(139,69,19));
-          g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
+          g.drawImage(breakable, i*unitSize+50, j*unitSize, unitSize, unitSize, null);
         }
         //pathway
         else if(color == 1){
@@ -341,9 +346,7 @@ public class Bman extends JPanel{
         }
         //walls
         else if(color == 2){
-          g.setColor(Color.darkGray);
-          g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
-          // g.drawImage(unbreak, i*unitSize+50, j*unitSize, unitSize, unitSize, null);
+          g.drawImage(unbreak, i*unitSize+50, j*unitSize, unitSize, unitSize, null);
         }
         //powerup addbomb
         else if(color == 7){
@@ -356,10 +359,8 @@ public class Bman extends JPanel{
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
         }
         // player one (tyler)
-        g.setColor(Color.pink);
         g.drawImage(pyr1, unitSize*BmanPlayers.getxPos(playerOne) +50, unitSize*BmanPlayers.getyPos(playerOne), 50, 50, null);
         // player two (kumz2)
-        g.setColor(Color.blue);
         g.drawImage(pyr2, unitSize*BmanPlayers.getxPos(playerTwo) +50, unitSize*BmanPlayers.getyPos(playerTwo) , 50, 50, null);
         //redirects to paint non-background
         if(color == 3){
@@ -438,16 +439,24 @@ public class Bman extends JPanel{
       winner += "Tyler Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
+    // menu.render();
   }
-  public void sound() {
-      // try {
-      //     AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("youtube.wav"));
-      //     Clip clip = AudioSystem.getClip();
-      //     clip.open(audioInputStream);
-      //     clip.start();
-      // } catch(Exception e) {
-      //     System.out.println("Error with playing sound.");
-      //     e.printStackTrace();
-      // }
+  public void sound(){
+    File yourFile = new File("youtube.wav");
+    AudioInputStream stream;
+    AudioFormat format;
+    DataLine.Info info;
+    Clip clip;
+    try{
+      stream = AudioSystem.getAudioInputStream(yourFile);
+      format = stream.getFormat();
+      info = new DataLine.Info(Clip.class, format);
+      clip = (Clip) AudioSystem.getLine(info);
+      clip.open(stream);
+      clip.start();
+    }catch(Exception e) {
+      System.out.println("Error with playing sound.");
+      e.printStackTrace();
+    }
   }
 }

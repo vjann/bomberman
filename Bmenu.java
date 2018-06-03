@@ -1,35 +1,38 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;
+import javax.swing.Box;
+import java.awt.event.WindowEvent;
 
 public class Bmenu extends Bman{
-  private Font titleFont = new Font("Serif", Font.BOLD, 50);
-
   public void render(){
+    System.out.println("bmenu");
+
+    Font titleFont = new Font("Serif", Font.BOLD, 50);
+    Font buttonFont = new Font("Times New Roman", Font.PLAIN, 20);
+
     System.out.println("adsf");
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     panel.setBounds(100, 100, 300, 200);
     panel.setBackground(Color.blue);
 
     JLabel title = new JLabel("BomberMan!", SwingConstants.CENTER);
+    panel.add(Box.createVerticalStrut(50));
     title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
     title.setFont(titleFont);
     panel.add(title);
 
     JButton startButton = new JButton("start");
     startButton.setFocusable(false);
+    panel.add(Box.createVerticalStrut(390));
+    startButton.setFont(buttonFont);
+    // startButton.setSize(100, 300);
     startButton.setBackground(Color.green);
     startButton.setForeground(Color.yellow);
     startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -38,6 +41,8 @@ public class Bmenu extends Bman{
 
     JButton helpButton = new JButton("help");
     helpButton.setFocusable(false);
+    panel.add(Box.createVerticalStrut(5));
+    helpButton.setFont(buttonFont);
     helpButton.setBackground(Color.green);
     helpButton.setForeground(Color.yellow);
     helpButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -45,11 +50,13 @@ public class Bmenu extends Bman{
 
     JButton quitButton = new JButton("quit");
     quitButton.setFocusable(false);
+    panel.add(Box.createVerticalStrut(5));
+    quitButton.setFont(buttonFont);
     quitButton.setBackground(Color.green);
     quitButton.setForeground(Color.yellow);
     quitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(quitButton);
-
+    panel.setVisible(true);
     con.add(panel);
     // frame.add(startButton, BorderLayout.NORTH);
 
@@ -57,9 +64,8 @@ public class Bmenu extends Bman{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
         state ="GAME";
+        panel.setBackground(Color.white);
         panel.setVisible(false);
-        con.remove(panel);
-        frame.remove(panel);
         frame.add(game);
         BmanPlayers.setPos(playerOne, units - 2, units - 2);
         BmanPlayers.setPos(playerTwo, 1, 1);
@@ -68,5 +74,23 @@ public class Bmenu extends Bman{
         game.actions();
       }
 	  });
+    helpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+        panel.setBackground(Color.white);
+        panel.setVisible(false);
+        Bhelp bhm = new Bhelp();
+        bhm.helpMenu();
+      }
+    });
+
+    quitButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+      }
+    });
+
+
   }
 }
