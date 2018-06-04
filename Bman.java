@@ -4,7 +4,6 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.JButton;
@@ -20,22 +19,19 @@ public class Bman extends JPanel{
   protected static int unitSize = 50;//size of each square
   public static BmanPlayers playerOne = new BmanPlayers();
   public static BmanPlayers playerTwo = new BmanPlayers();
-  public static double boxprob = 0.4;    //CHANGED
-  public double random;     //CHANGED
+  public static double boxprob = 0.45;    //CHANGED
   public static Bmenu menu;
-  public static Bendgame theEnd;
   protected static JFrame frame;//title in window bar
   protected static Container con;
   protected static JPanel panel;
   public static Bman game = new Bman();
-  protected static String state = "MENU";
   protected static String character1 = "Tyler";
   protected static String character2 = "Kumar";
+  private static boolean restart = false;
 
   protected static BufferedImage pyr1 = null;
   protected static BufferedImage pyr2 = null;
-  private static BufferedImage p1Lives = null;
-  private static BufferedImage p2Lives = null;
+  private static BufferedImage pLives = null;
   private static BufferedImage redb = null;
   private static BufferedImage blueb = null;
   private static BufferedImage unbreak = null;
@@ -59,23 +55,41 @@ public class Bman extends JPanel{
       pyr2 = ImageIO.read(new File("kumz2.png"));
       redb = ImageIO.read(new File("redbomb.png"));
       blueb = ImageIO.read(new File("bluebomb.png"));
-      p1Lives = ImageIO.read(new File("playerlives.jpg"));
-      p2Lives = ImageIO.read(new File("playerlives.jpg"));
+      pLives = ImageIO.read(new File("playerlives.jpg"));
       unbreak = ImageIO.read(new File("unbreakable.png"));
       breakable = ImageIO.read(new File("breakable.jpg"));
     } catch (IOException e) {
       e.printStackTrace();
     }
     backgroundMusic();
-
-    if(state.equals("MENU")){
-      panel = new JPanel();
-      menu.render();
-    }
+    panel = new JPanel();
+    menu.render();
     frame.setVisible(true);
-
-
   }
+  public void init(){//initialize game,       //CHANGED
+      well = new int[units][units];
+      //fills well with black, with gray on border and with the pattern, brown for breakable boxes
+      for(int i = 0; i < units; i ++){
+        for(int j = 0; j < units; j ++){
+          if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
+            well[i][j] = 2;
+          }
+          else if ((i == 1 && (j == 1 || j == 2)) || (i == 2 && j == 1) || (i == 11 && (j == 11 || j == 10)) || (i == 10 && j == 11)){
+            well[i][j] = 1;
+          }
+          else{
+            if (Math.random() <= boxprob){
+              well[i][j]=0;
+            }
+            else{
+              well[i][j]=1;
+            }
+           // well[i][j] = 1;
+          }
+        }
+      }
+      repaint();
+    }
   public static void actions(){
     //KEYLISTENER
     frame.addKeyListener(new KeyListener() {
@@ -148,19 +162,15 @@ public class Bman extends JPanel{
         game.repaint();
         // player two (WASD)
         if(e.getKeyCode() == KeyEvent.VK_W && (well[p2x][p2y-1] == 1 || well[p2x][p2y-1] >=5)){
-          System.out.println("w");
           nextStep(p2x, p2y-1, playerTwo);
         }
         else if(e.getKeyCode() == KeyEvent.VK_S && (well[p2x][p2y+1] == 1 || well[p2x][p2y+1] >=5)){
-          System.out.println("s");
           nextStep(p2x, p2y+1, playerTwo);
         }
         else if(e.getKeyCode() == KeyEvent.VK_A && (well[p2x-1][p2y] == 1 || well[p2x-1][p2y] >=5)){
-          System.out.println("a");
           nextStep(p2x-1, p2y, playerTwo);
         }
         else if(e.getKeyCode() == KeyEvent.VK_D && (well[p2x+1][p2y] == 1 || well[p2x+1][p2y] >=5)){
-          System.out.println("d");
           nextStep(p2x+1, p2y, playerTwo);
         }
         else if(e.getKeyCode() == KeyEvent.VK_T && (BmanPlayers.getBombs(playerTwo) > 0)){
@@ -213,19 +223,30 @@ public class Bman extends JPanel{
       return;
     }
   }
-  public static int RNGESUS(BmanPlayers player, int bombRay){
-    int roll = (int)(100*Math.random());
-    if(roll < 10){
-      return 7; //add bomb
+  public static void nextStep(int xPos, int yPos, BmanPlayers player){
+    BmanPlayers.setPos(player, xPos, yPos);
+    if(!BmanPlayers.getInvincibility(player) && (well[xPos][yPos] == 5 || well[xPos][yPos] == 6)){
+      BmanPlayers.loseLife(player);
     }
-    else if(roll < 20){
-      return 8; //add bomb size
+    else if(well[xPos][yPos] == 7){
+      if(BmanPlayers.getMaxBombs(player) <=6){
+        BmanPlayers.addMaxBombs(player);
+        BmanPlayers.addBombs(player);
+      }
+      well[xPos][yPos] = 1;
     }
-    else if(roll< 25){
-      return 9; //add lives
+    else if(well[xPos][yPos] == 8){
+      if(BmanPlayers.getexplodeSize(player) <=6){
+        BmanPlayers.addExplodeSize(player, 1);
+
+      }
+      well[xPos][yPos] = 1;
     }
-    else{
-      return bombRay;
+    else if(well[xPos][yPos] == 9){
+      if(BmanPlayers.getLives(player) <= 4){
+        BmanPlayers.addLives(player);
+      }
+      well[xPos][yPos] = 1;
     }
   }
   public void explode(BmanPlayers player, int x, int y, int e){
@@ -240,7 +261,10 @@ public class Bman extends JPanel{
     for(int i = 1 ; i < e; i++){
       //if well is wall (2), explosion stops
       //if well is destroyable obstacle (0), explosion destroys it and obstacle stops explosion
-      if(well[x][y+i] == 0 || well[x][y+i] == 2){
+      if(well[x][y+i] == 0 || well[x][y+i] == 2 || well[x][y+i] == 3 || well[x][y+i] == 4){
+        if(well[x][y+i] == 3 || well[x][y+i] == 4){
+          continue;
+        }
         if(well[x][y+i] == 0){
           if(player == playerOne){
             bombRay = 13;
@@ -290,7 +314,10 @@ public class Bman extends JPanel{
     }
     //next three for loops are the same but in dif. direction. Check comments for the first for loop for clarifications
     for(int j = 1; j < e; j++){
-      if(well[x][y-j] == 0 || well[x][y-j] == 2){
+      if(well[x][y-j] == 0 || well[x][y-j] == 2 || well[x][y-j] == 3 || well[x][y-j] == 4){
+        if(well[x][y-j] == 3 || well[x][y-j] == 4){
+          continue;
+        }
         if(well[x][y-j] == 0){
           if(player == playerOne){
             bombRay = 13;
@@ -338,7 +365,10 @@ public class Bman extends JPanel{
       }
     }
     for(int k = 1; k < e; k++){
-      if(well[x+k][y] == 0 || well[x+k][y] == 2){
+      if(well[x+k][y] == 0 || well[x+k][y] == 2 || well[x+k][y] == 3 || well[x+k][y] == 4){
+        if(well[x+k][y] == 3 || well[x+k][y] == 4){
+          continue;
+        }
         if(well[x+k][y] == 0){
           if(player == playerOne){
             bombRay = 12;
@@ -386,7 +416,10 @@ public class Bman extends JPanel{
       }
     }
     for(int l = 1; l < e; l++){
-      if(well[x-l][y] == 0 || well[x-l][y] == 2){
+      if(well[x-l][y] == 0 || well[x-l][y] == 2 || well[x-l][y] == 3 || well[x-l][y] == 4){
+        if(well[x-l][y] == 3 || well[x-l][y] == 4){
+          continue;
+        }
         if(well[x-l][y] == 0){
           if(player == playerOne){
             bombRay = 12;
@@ -436,58 +469,6 @@ public class Bman extends JPanel{
     //paint the changes that were made above
     repaint();
   }
-  public static void nextStep(int xPos, int yPos, BmanPlayers player){
-    BmanPlayers.setPos(player, xPos, yPos);
-    if(!BmanPlayers.getInvincibility(player) && (well[xPos][yPos] == 5 || well[xPos][yPos] == 6)){
-      BmanPlayers.loseLife(player);
-    }
-    else if(well[xPos][yPos] == 7){
-      if(BmanPlayers.getMaxBombs(player) <=6){
-        BmanPlayers.addMaxBombs(player);
-        BmanPlayers.addBombs(player);
-      }
-      well[xPos][yPos] = 1;
-    }
-    else if(well[xPos][yPos] == 8){
-      if(BmanPlayers.getexplodeSize(player) <=6){
-        BmanPlayers.addExplodeSize(player, 1);
-
-      }
-      well[xPos][yPos] = 1;
-    }
-    else if(well[xPos][yPos] == 9){
-      if(BmanPlayers.getLives(player) <= 4){
-        BmanPlayers.addLives(player);
-      }
-      well[xPos][yPos] = 1;
-    }
-  }
-
-  public void init(){//initialize game,       //CHANGED
-      well = new int[units][units];
-      //fills well with black, with gray on border and with the pattern, brown for breakable boxes
-      for(int i = 0; i < units; i ++){
-        for(int j = 0; j < units; j ++){
-          if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
-            well[i][j] = 2;
-          }
-          else if ((i == 1 && (j == 1 || j == 2)) || (i == 2 && j == 1) || (i == 11 && (j == 11 || j == 10)) || (i == 10 && j == 11)){
-            well[i][j] = 1;
-          }
-          else{
-            random = Math.random();
-            if (random <= boxprob){
-              well[i][j]=0;
-            }
-            else{
-              well[i][j]=1;
-            }
-           // well[i][j] = 1;
-          }
-        }
-      }
-      repaint();
-    }
   public void paintComponent(Graphics g){
     Graphics2D g2 = (Graphics2D)g;
     //sets up icons and images of players, bombs, maybe bombrays
@@ -521,7 +502,7 @@ public class Bman extends JPanel{
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
         }
         else if(color == 9){
-          g.drawImage(p1Lives, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
+          g.drawImage(pLives, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
         }
         // player one (tyler)
         g.drawImage(pyr1, unitSize*BmanPlayers.getxPos(playerOne) +50, unitSize*BmanPlayers.getyPos(playerOne), 50, 50, null);
@@ -571,10 +552,10 @@ public class Bman extends JPanel{
     g.fillRect(0, 0, 50, units*unitSize);
     g.fillRect(units*unitSize+50, 0, 50, units*unitSize);
     for(int i = 0; i < BmanPlayers.getLives(playerTwo); i ++){
-      g.drawImage(p1Lives, 0, unitSize*i, unitSize, unitSize, null);
+      g.drawImage(pLives, 0, unitSize*i, unitSize, unitSize, null);
     }
     for(int i = 0; i < BmanPlayers.getLives(playerOne); i ++){
-      g.drawImage(p1Lives, units*unitSize+50, unitSize*i, unitSize, unitSize, null);
+      g.drawImage(pLives, units*unitSize+50, unitSize*i, unitSize, unitSize, null);
     }
     for(int i = 0; i < BmanPlayers.getBombs(playerTwo); i ++){
       g.drawImage(blueb, 0, unitSize*(i+5), unitSize, unitSize, null);
@@ -592,12 +573,10 @@ public class Bman extends JPanel{
       g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
     }
     if(BmanPlayers.getLives(playerOne) <= 0){
-      state ="END";
       endGame(g, playerOne);
       return;
     }
     else if(BmanPlayers.getLives(playerTwo) <= 0){
-      state = "END";
       endGame(g, playerTwo);
       return;
     }
@@ -635,6 +614,21 @@ public class Bman extends JPanel{
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
     // menu.render();
+  }
+  public static int RNGESUS(BmanPlayers player, int bombRay){
+    int roll = (int)(100*Math.random());
+    if(roll < 10){
+      return 7; //add bomb
+    }
+    else if(roll < 20){
+      return 8; //add bomb size
+    }
+    else if(roll< 25){
+      return 9; //add lives
+    }
+    else{
+      return bombRay;
+    }
   }
   public void sound(){
     File yourFile = new File("youtube.wav");

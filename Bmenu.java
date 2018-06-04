@@ -35,7 +35,7 @@ public class Bmenu extends Bman{
     panel.add(Box.createVerticalStrut(300));
     startButton.setFont(buttonFont);
     // startButton.setSize(100, 300);
-    startButton.setBackground(Color.green);
+    startButton.setBackground(Color.red);
     startButton.setForeground(Color.black);
     startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
@@ -45,7 +45,7 @@ public class Bmenu extends Bman{
     helpButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
     helpButton.setFont(buttonFont);
-    helpButton.setBackground(Color.green);
+    helpButton.setBackground(Color.red);
     helpButton.setForeground(Color.black);
     helpButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(helpButton);
@@ -54,7 +54,7 @@ public class Bmenu extends Bman{
     quitButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
     quitButton.setFont(buttonFont);
-    quitButton.setBackground(Color.green);
+    quitButton.setBackground(Color.red);
     quitButton.setForeground(Color.black);
     quitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(quitButton);
@@ -63,7 +63,7 @@ public class Bmenu extends Bman{
     characterButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
     characterButton.setFont(buttonFont);
-    characterButton.setBackground(Color.green);
+    characterButton.setBackground(Color.red);
     characterButton.setForeground(Color.black);
     characterButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(characterButton);
@@ -75,7 +75,6 @@ public class Bmenu extends Bman{
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-        state ="GAME";
         panel.setBackground(Color.white);
         panel.setVisible(false);
         frame.add(game);
