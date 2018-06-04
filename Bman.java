@@ -29,8 +29,8 @@ public class Bman extends JPanel{
   protected static JPanel panel;
   public static Bman game = new Bman();
   protected static String state = "MENU";
-  protected static String character1;
-  protected static String character2;
+  protected static String character1 = "Tyler";
+  protected static String character2 = "Kumar";
 
   protected static BufferedImage pyr1 = null;
   protected static BufferedImage pyr2 = null;
@@ -43,7 +43,8 @@ public class Bman extends JPanel{
 
   private static Color transPink = new Color(255, 192, 203, 160);
   private static Color transBlue = new Color(0, 0, 255, 160);
-
+  private static float alpha = (float) 0.3; //draw half transparent
+  private static AlphaComposite trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
 
   public static void main(String[] args){
     frame = new JFrame("BomberMan!");
@@ -108,11 +109,11 @@ public class Bman extends JPanel{
             @Override public void run() {
               try {
                 if(well[p1x][p1y] == 1 && BmanPlayers.getBombs(playerOne) > 0){
-                  // drop bomb, timer for 3 sec
+                  // drop bomb, timer for 2.5 sec
                   BmanPlayers.changeBombs(playerOne, -1);
                   well[p1x][p1y] = 3;
                   game.repaint();
-                  Thread.sleep(3000);
+                  Thread.sleep(2500);
                   // bomb explodes
                   game.explode(playerOne, p1x, p1y, BmanPlayers.getexplodeSize(playerOne));
                   //bomb disappears
@@ -145,30 +146,33 @@ public class Bman extends JPanel{
           }.start();
         }
         game.repaint();
-
         // player two (WASD)
-        if(e.getKeyCode() == KeyEvent.VK_W && well[p2x][p2y-1] == 1 || well[p2x][p2y-1] >=5){
+        if(e.getKeyCode() == KeyEvent.VK_W && (well[p2x][p2y-1] == 1 || well[p2x][p2y-1] >=5)){
+          System.out.println("w");
           nextStep(p2x, p2y-1, playerTwo);
         }
-        else if(e.getKeyCode() == KeyEvent.VK_S && well[p2x][p2y+1] == 1 || well[p2x][p2y+1] >=5){
+        else if(e.getKeyCode() == KeyEvent.VK_S && (well[p2x][p2y+1] == 1 || well[p2x][p2y+1] >=5)){
+          System.out.println("s");
           nextStep(p2x, p2y+1, playerTwo);
         }
-        else if(e.getKeyCode() == KeyEvent.VK_A && well[p2x-1][p2y] == 1 || well[p2x-1][p2y] >=5){
+        else if(e.getKeyCode() == KeyEvent.VK_A && (well[p2x-1][p2y] == 1 || well[p2x-1][p2y] >=5)){
+          System.out.println("a");
           nextStep(p2x-1, p2y, playerTwo);
         }
-        else if(e.getKeyCode() == KeyEvent.VK_D && well[p2x+1][p2y] == 1 || well[p2x+1][p2y] >=5){
+        else if(e.getKeyCode() == KeyEvent.VK_D && (well[p2x+1][p2y] == 1 || well[p2x+1][p2y] >=5)){
+          System.out.println("d");
           nextStep(p2x+1, p2y, playerTwo);
         }
-        else if(e.getKeyCode() == KeyEvent.VK_T && BmanPlayers.getBombs(playerTwo) > 0){
+        else if(e.getKeyCode() == KeyEvent.VK_T && (BmanPlayers.getBombs(playerTwo) > 0)){
           new Thread() {
             @Override public void run() {
               try {
                 if(well[p2x][p2y] == 1 && BmanPlayers.getBombs(playerTwo) > 0){
-                  // drop bomb, timer for 3 sec
+                  // drop bomb, timer for 2.5 sec
                   BmanPlayers.changeBombs(playerTwo, -1);
                   well[p2x][p2y] = 4;
                   game.repaint();
-                  Thread.sleep(3000);
+                  Thread.sleep(2500);
                   //bomb explodes
                   game.explode(playerTwo, p2x, p2y, BmanPlayers.getexplodeSize(playerTwo));
                   //bomb disappears
@@ -211,13 +215,13 @@ public class Bman extends JPanel{
   }
   public static int RNGESUS(BmanPlayers player, int bombRay){
     int roll = (int)(100*Math.random());
-    if(roll < 20){
+    if(roll < 10){
       return 7; //add bomb
     }
-    else if(roll < 40){
+    else if(roll < 20){
       return 8; //add bomb size
     }
-    else if(roll< 50){
+    else if(roll< 25){
       return 9; //add lives
     }
     else{
@@ -230,7 +234,7 @@ public class Bman extends JPanel{
     int p1y = BmanPlayers.getyPos(playerOne);
     int p2x = BmanPlayers.getxPos(playerTwo);
     int p2y = BmanPlayers.getyPos(playerTwo);
-    int bombRay;
+    int bombRay = -1;
     //check units in all four directions up to radius e, sets well to explosions unless hits wall
     //BUG: bomb ray does not include bombs origin
     for(int i = 1 ; i < e; i++){
@@ -241,7 +245,7 @@ public class Bman extends JPanel{
           if(player == playerOne){
             bombRay = 13;
           }
-          else{
+          else if (player == playerTwo){
             bombRay = 15;
           }
           well[x][y+i] = RNGESUS(player, bombRay);
@@ -280,7 +284,7 @@ public class Bman extends JPanel{
       if(player == playerOne){
         well[x][y + i] = 13;
       }
-      else{
+      else if(player == playerTwo){
         well[x][y + i] = 15;
       }
     }
@@ -291,7 +295,7 @@ public class Bman extends JPanel{
           if(player == playerOne){
             bombRay = 13;
           }
-          else{
+          else if(player == playerTwo){
             bombRay = 15;
           }
           well[x][y-j] = RNGESUS(player, bombRay);
@@ -329,7 +333,7 @@ public class Bman extends JPanel{
       if(player == playerOne){
         well[x][y - j] = 13;
       }
-      else{
+      else if(player == playerTwo){
         well[x][y - j] = 15;
       }
     }
@@ -339,7 +343,7 @@ public class Bman extends JPanel{
           if(player == playerOne){
             bombRay = 12;
           }
-          else{
+          else if(player == playerTwo){
             bombRay = 14;
           }
           well[x+k][y] = RNGESUS(player, bombRay);
@@ -377,7 +381,7 @@ public class Bman extends JPanel{
       if(player == playerOne){
         well[x + k][y] = 12;
       }
-      else{
+      else if(player == playerTwo){
         well[x + k][y] = 14;
       }
     }
@@ -387,7 +391,7 @@ public class Bman extends JPanel{
           if(player == playerOne){
             bombRay = 12;
           }
-          else{
+          else if(player == playerTwo){
             bombRay = 14;
           }
           well[x-l][y] = RNGESUS(player, bombRay);
@@ -408,7 +412,7 @@ public class Bman extends JPanel{
           }
         }.start();
       }
-      if(x - l == p2x && y== p2y && !BmanPlayers.getInvincibility(playerTwo)){
+      if(x - l == p2x && y == p2y && !BmanPlayers.getInvincibility(playerTwo)){
         BmanPlayers.loseLife(playerTwo);
         new Thread() {
           @Override public void run() {
@@ -425,7 +429,7 @@ public class Bman extends JPanel{
       if(player == playerOne){
         well[x - l][y] = 12;
       }
-      else{
+      else if(player == playerTwo){
         well[x - l][y] = 14;
       }
     }
@@ -578,8 +582,8 @@ public class Bman extends JPanel{
     for(int i = 0; i < BmanPlayers.getBombs(playerOne); i ++){
       g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
     }
-    float alpha = (float) 0.3; //draw half transparent
-    AlphaComposite trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+    alpha = (float) 0.3; //draw half transparent
+    trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     g2.setComposite(trans);
     for(int i = 0; i < BmanPlayers.getMaxBombs(playerTwo); i ++){
       g.drawImage(blueb, 0, unitSize*(i+5), unitSize, unitSize, null);
@@ -613,16 +617,21 @@ public class Bman extends JPanel{
     }
   }
   public void endGame(Graphics g, BmanPlayers player){
+    Graphics2D g2 = (Graphics2D)g;
+    alpha = (float) 1; //draw half transparent
+    trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+    g2.setComposite(trans);
+
     Font myFont = new Font("Serif", Font.BOLD, 50);
     g.setColor(Color.RED);
     g.setFont(myFont);
     g.drawString("Game Over",(int) (units*unitSize*0.15), (int) (units*unitSize*0.25));
     String winner = "";
     if(player == playerOne){
-      winner += character1 + " Wins";
-    }
-    else{
       winner += character2 + " Wins";
+    }
+    else if(player == playerTwo){
+      winner += character1 + " Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
     // menu.render();

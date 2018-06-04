@@ -9,32 +9,34 @@ import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 import java.awt.event.WindowEvent;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 public class Bmenu extends Bman{
   public void render(){
-    System.out.println("bmenu");
 
     Font titleFont = new Font("Serif", Font.BOLD, 50);
     Font buttonFont = new Font("Times New Roman", Font.PLAIN, 20);
 
-    System.out.println("adsf");
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     panel.setBounds(100, 100, 300, 200);
-    panel.setBackground(Color.blue);
+    panel.setBackground(Color.black);
 
-    JLabel title = new JLabel("BomberMan!", SwingConstants.CENTER);
+    Icon icon = new ImageIcon("title.gif");
+    JLabel title = new JLabel(icon, SwingConstants.CENTER);
     panel.add(Box.createVerticalStrut(50));
+    title.setForeground(Color.green);
     title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
     title.setFont(titleFont);
     panel.add(title);
 
     JButton startButton = new JButton("start");
     startButton.setFocusable(false);
-    panel.add(Box.createVerticalStrut(370));
+    panel.add(Box.createVerticalStrut(300));
     startButton.setFont(buttonFont);
     // startButton.setSize(100, 300);
     startButton.setBackground(Color.green);
-    startButton.setForeground(Color.yellow);
+    startButton.setForeground(Color.black);
     startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
     panel.add(startButton);
@@ -44,7 +46,7 @@ public class Bmenu extends Bman{
     panel.add(Box.createVerticalStrut(5));
     helpButton.setFont(buttonFont);
     helpButton.setBackground(Color.green);
-    helpButton.setForeground(Color.yellow);
+    helpButton.setForeground(Color.black);
     helpButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(helpButton);
 
@@ -53,7 +55,7 @@ public class Bmenu extends Bman{
     panel.add(Box.createVerticalStrut(5));
     quitButton.setFont(buttonFont);
     quitButton.setBackground(Color.green);
-    quitButton.setForeground(Color.yellow);
+    quitButton.setForeground(Color.black);
     quitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(quitButton);
 
@@ -62,7 +64,7 @@ public class Bmenu extends Bman{
     panel.add(Box.createVerticalStrut(5));
     characterButton.setFont(buttonFont);
     characterButton.setBackground(Color.green);
-    characterButton.setForeground(Color.yellow);
+    characterButton.setForeground(Color.black);
     characterButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(characterButton);
 
