@@ -36,6 +36,8 @@ public class Bman extends JPanel{
   private static BufferedImage blueb = null;
   private static BufferedImage unbreak = null;
   private static BufferedImage breakable = null;
+  private static BufferedImage bombup = null;
+  private static BufferedImage sizeUp = null;
 
   private static Color transPink = new Color(255, 192, 203, 160);
   private static Color transBlue = new Color(0, 0, 255, 160);
@@ -58,6 +60,9 @@ public class Bman extends JPanel{
       pLives = ImageIO.read(new File("playerlives.jpg"));
       unbreak = ImageIO.read(new File("unbreakable.png"));
       breakable = ImageIO.read(new File("breakable.jpg"));
+      bombup = ImageIO.read(new File("bombup.png"));
+      sizeUp = ImageIO.read(new File("sizeUp.png"));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -493,13 +498,15 @@ public class Bman extends JPanel{
         }
         //powerup addbomb
         else if(color == 7){
-          g.setColor(Color.green);
+          g.setColor(Color.black);
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
+          g.drawImage(bombup, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
         }
         //powerup addbombradius
         else if(color == 8){
-          g.setColor(Color.red);
+          g.setColor(Color.black);
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
+          g.drawImage(sizeUp, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
         }
         else if(color == 9){
           g.drawImage(pLives, unitSize*i+50, unitSize*j, unitSize-1, unitSize-1, null);
@@ -631,7 +638,7 @@ public class Bman extends JPanel{
     }
   }
   public void sound(){
-    File yourFile = new File("youtube.wav");
+    File yourFile = new File("pta.wav");
     AudioInputStream stream;
     AudioFormat format;
     DataLine.Info info;
