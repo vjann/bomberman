@@ -26,7 +26,7 @@ public class Bmenu extends Bman{
     // shows gif of title on main menu
     Icon icon = new ImageIcon("title.gif");
     JLabel title = new JLabel(icon, SwingConstants.CENTER);
-    panel.add(Box.createVerticalStrut(50));
+    panel.add(Box.createVerticalStrut(50));//add spacing
     title.setForeground(Color.green);
     title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
     title.setFont(titleFont);
@@ -41,7 +41,6 @@ public class Bmenu extends Bman{
     startButton.setBackground(Color.red);
     startButton.setForeground(Color.black);
     startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
-
     panel.add(startButton);
 
     // creates help button to show controls, powerups
@@ -77,11 +76,14 @@ public class Bmenu extends Bman{
     panel.setVisible(true);
     con.add(panel);
 
+    //start button actions to start game
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+        //delete menu panel(screen)
         panel.setBackground(Color.white);
         panel.setVisible(false);
+        //start game, initialize characters
         frame.add(game);
         BmanPlayers.setPos(playerOne, units - 2, units - 2);
         BmanPlayers.setPos(playerTwo, 1, 1);
@@ -90,27 +92,35 @@ public class Bmenu extends Bman{
         game.actions();
       }
 	  });
+
+    //help button actions for help menu
     helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+        //delete (titlescreen) menu screen
         panel.setBackground(Color.white);
         panel.setVisible(false);
         Bhelp bhm = new Bhelp();
+        //call help menu
         bhm.helpMenu();
       }
     });
 
+    //quit button action to close window, quit game
     quitButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0) {
         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
       }
     });
+
+    //character button to choose character
     characterButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0) {
         panel.setBackground(Color.white);
         panel.setVisible(false);
+        //open character menu
         BmanCharacter bmc = new BmanCharacter();
         bmc.characterMenu();
       }

@@ -21,20 +21,16 @@ public class BmanCharacter extends Bman{
     Font myFont = new Font("Times New Roman", Font.PLAIN, 15);
     JPanel characterPanel = new JPanel();
 
-    // array of possible characters
+    // array of possible characters, defaults are tyler for p1, kumar p2
     String[] chars1 = new String[] {"Tyler", "Kumar", "Obama", "Trump"};
     String[] chars2 = new String[] {"Kumar", "Tyler", "Obama", "Trump"};
     JComboBox<String> combo1 = new JComboBox<>(chars1);
     JComboBox<String> combo2 = new JComboBox<>(chars2);
-    // combo1.addItem("Tyler");
-    // combo1.addItem("Kumar");
-    // combo1.addItem("Obama");
-    // combo1.addItem("Trump");
     characterPanel.setLayout(new BoxLayout(characterPanel, BoxLayout.PAGE_AXIS));
 
     // allow players to choose their characters
     JLabel title = new JLabel("Choose Your Character", SwingConstants.CENTER);
-    characterPanel.add(Box.createVerticalStrut(70));
+    characterPanel.add(Box.createVerticalStrut(70));//spacing
     title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
     title.setFont(titleFont);
     characterPanel.add(title);

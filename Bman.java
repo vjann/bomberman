@@ -72,9 +72,9 @@ public class Bman extends JPanel{
     } catch (IOException e) {
       e.printStackTrace();
     }
-    backgroundMusic();
+    backgroundMusic();//start music
     panel = new JPanel();
-    menu.render();
+    menu.render();//opens menu screen
     frame.setVisible(true);
   }
   public void init(){//initialize game
@@ -92,19 +92,19 @@ public class Bman extends JPanel{
     for(int i = 0; i < units; i ++){
       for(int j = 0; j < units; j ++){
         if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
-          well[i][j] = 2;
+          well[i][j] = 2;//grey stone walls (unbreakable)
         }
         else if ((i == 1 && (j == 1 || j == 2)) || (i == 2 && j == 1) || (i == 11 && (j == 11 || j == 10)) || (i == 10 && j == 11)){
-          well[i][j] = 1;
+          well[i][j] = 1;//black pathways
         }
         else{
+          //fills map randomly with breakable boxes
           if (Math.random() <= boxprob){
-            well[i][j]=0;
+            well[i][j]=0;//breakable brown boxes/obstacles
           }
           else{
-            well[i][j]=1;
+            well[i][j]=1;//black pathways
           }
-         // well[i][j] = 1;
         }
       }
     }
@@ -120,24 +120,24 @@ public class Bman extends JPanel{
         int p1y = BmanPlayers.getyPos(playerOne);
         int p2x = BmanPlayers.getxPos(playerTwo);
         int p2y = BmanPlayers.getyPos(playerTwo);
-        //when direction is pressed, check if prospective new position is either pathway(1), or rays of bomb explosion (12-15)
+        //when direction is pressed, check if prospective new position is either pathway(1), or rays of bomb explosion (12-15), or powerup
         if(e.getKeyCode() == KeyEvent.VK_UP && (well[p1x][p1y-1] == 1 || well[p1x][p1y-1] >=5 )){
-          //check if new position is bomb ray, lose life when walked into
+          //check if new position is bomb ray, lose life when walked into, or powerup
           nextStep(p1x, p1y-1, playerOne);
         }
         else if(e.getKeyCode() == KeyEvent.VK_DOWN && (well[p1x][p1y+1] == 1 || well[p1x][p1y+1] >=5)){
-          //check if new position is bomb ray, lose life when walked into
+          //check if new position is bomb ray, lose life when walked into, or powerup
           nextStep(p1x, p1y+1, playerOne);
         }
         else if(e.getKeyCode() == KeyEvent.VK_LEFT && (well[p1x-1][p1y] == 1 || well[p1x-1][p1y] >=5)){
-          //check if new position is bomb ray, lose life when walked into
+          //check if new position is bomb ray, lose life when walked into, or powerup
           nextStep(p1x-1, p1y, playerOne);
         }
         else if(e.getKeyCode() == KeyEvent.VK_RIGHT && (well[p1x+1][p1y] == 1 || well[p1x+1][p1y] >=5)){
-          //check if new position is bomb ray, lose life when walked into
+          //check if new position is bomb ray, lose life when walked into, or powerup
           nextStep(p1x+1, p1y, playerOne);
         }
-        //drop bomb if space is pressed and still has availabe bombs
+        //drop bomb if space is pressed and still has available bombs
         else if(e.getKeyCode() == KeyEvent.VK_ENTER && BmanPlayers.getBombs(playerOne) > 0){
           new Thread() {
             @Override public void run() {
@@ -167,7 +167,7 @@ public class Bman extends JPanel{
         }
         // function to place breakable box, recharges every 3 seconds
         else if(e.getKeyCode() == KeyEvent.VK_BACK_SLASH && BmanPlayers.getCanDrop(playerOne)){
-          well[p1x][p1y] = 0;
+          well[p1x][p1y] = 0;//breakable box
           new Thread() {
             @Override public void run() {
               try {
@@ -565,7 +565,7 @@ public class Bman extends JPanel{
         g.drawImage(pyr1, unitSize*BmanPlayers.getxPos(playerOne) +50, unitSize*BmanPlayers.getyPos(playerOne), 50, 50, null);
         // player two (kumz2)
         g.drawImage(pyr2, unitSize*BmanPlayers.getxPos(playerTwo) +50, unitSize*BmanPlayers.getyPos(playerTwo) , 50, 50, null);
-        //redirects to paint non-background
+        //player one bomb
         if(color == 3){
           g.setColor(Color.black);
           g.fillRect(unitSize*i+50, unitSize*j, unitSize-1, unitSize-1);
@@ -621,7 +621,7 @@ public class Bman extends JPanel{
     for(int i = 0; i < BmanPlayers.getBombs(playerOne); i ++){
       g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
     }
-    alpha = (float) 0.3; //draw half transparent
+    alpha = (float) 0.3; //draws half transparent
     trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     g2.setComposite(trans);
     for(int i = 0; i < BmanPlayers.getMaxBombs(playerTwo); i ++){
@@ -641,10 +641,7 @@ public class Bman extends JPanel{
   }
   //erases the bomb rays
   public static void bombReset(){
-    //goes through entire well, turns bomb rays (12-15) to background (1)
-    /* BUG: if two bombs placed in rapid succession, erasing first bomb ray by the timer
-    will erase all other current bomb rays before their timer is up
-    */
+    //goes through entire matrix, turns bomb rays (12-15) to background (1)
     for(int i = 1; i < units-1; i++){
       for(int j = 1; j < units-1; j++){
         if(well[i][j] == 12 || well [i][j] == 13 || well [i][j] == 14 || well [i][j] == 15){
@@ -656,7 +653,7 @@ public class Bman extends JPanel{
   // when one player loses, displays the winner and ends the game
   public void endGame(Graphics g, BmanPlayers player){
     Graphics2D g2 = (Graphics2D)g;
-    alpha = (float) 1; //draw half transparent
+    alpha = (float) 1; //draw opaque
     trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     g2.setComposite(trans);
 
@@ -685,6 +682,7 @@ public class Bman extends JPanel{
         try{
           for(int i = 0; i <5; i ++){
             for(int j = i; j < 10-i; j++){
+              //if player caught up in shrinking map, player dies
               if(well[BmanPlayers.getxPos(playerOne)][BmanPlayers.getyPos(playerOne)] == 2){
                 BmanPlayers.setLives(playerOne, 0);
               }

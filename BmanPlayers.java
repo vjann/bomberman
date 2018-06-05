@@ -101,11 +101,11 @@ public class BmanPlayers{ // class for players
   public static void setInvinciblility(BmanPlayers player, boolean isInvincible){
     player.invincible = isInvincible;
   }
-  // returns the player's drop status
+  // returns the player's drop obstacle (breakable brown box) status
   public static boolean getCanDrop(BmanPlayers player){
     return player.canDrop;
   }
-  // sets the player's invincibility status
+  // sets the player's drop obstacle (breakable brown box) status
   public static void setCanDrop(BmanPlayers player, boolean bool){
     player.canDrop = bool;
   }
