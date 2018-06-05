@@ -11,10 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.AlphaComposite;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for breakable boxes, 1 for pathway for movement (black),
-  // 2 for set obstacle (gray), 3 for bomb P1, 4 for bomb P2, 12 p1 explosion horiz, 13 p1 explosion vert, 14 is p2 explosion horiz, 15 is p2 explosion vert
+  // 2 for wall (gray), 3 for bomb P1, 4 for bomb P2, 12 p1 explosion horiz, 13 p1 explosion vert, 14 is p2 explosion horiz, 15 is p2 explosion vert
   protected static int units = 13;//each square is a units
   protected static int unitSize = 50;//size of each square
   public static BmanPlayers playerOne = new BmanPlayers();
@@ -25,8 +28,6 @@ public class Bman extends JPanel{
   protected static Container con;
   protected static JPanel panel;
   public static Bman game = new Bman();
-  protected static String character1 = "Tyler";
-  protected static String character2 = "Kumar";
   private static boolean restart = false;
 
   protected static BufferedImage pyr1 = null;
@@ -51,6 +52,8 @@ public class Bman extends JPanel{
 
     con = frame.getContentPane();
     menu = new Bmenu();
+    BmanPlayers.setChar(playerOne, "Tyler");
+    BmanPlayers.setChar(playerTwo, "Kumar");
 
     try {
       pyr1 = ImageIO.read(new File("tyler.png"));
@@ -72,29 +75,38 @@ public class Bman extends JPanel{
     frame.setVisible(true);
   }
   public void init(){//initialize game,       //CHANGED
-      well = new int[units][units];
-      //fills well with black, with gray on border and with the pattern, brown for breakable boxes
-      for(int i = 0; i < units; i ++){
-        for(int j = 0; j < units; j ++){
-          if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
-            well[i][j] = 2;
-          }
-          else if ((i == 1 && (j == 1 || j == 2)) || (i == 2 && j == 1) || (i == 11 && (j == 11 || j == 10)) || (i == 10 && j == 11)){
-            well[i][j] = 1;
+    Timer t = new Timer(1000*60, new ActionListener(){
+      @Override
+      public void actionPerformed(ActionEvent e){
+        System.out.println("hi");
+        restrictMap();
+        ((Timer)e.getSource()).stop();
+      }
+    });
+    t.start();
+    well = new int[units][units];
+    //fills well with black, with gray on border and with the pattern, brown for breakable boxes
+    for(int i = 0; i < units; i ++){
+      for(int j = 0; j < units; j ++){
+        if(i == 0 || i == units-1 || j == 0 || j == units-1 || (i % 2 == 0 && j % 2 == 0)){
+          well[i][j] = 2;
+        }
+        else if ((i == 1 && (j == 1 || j == 2)) || (i == 2 && j == 1) || (i == 11 && (j == 11 || j == 10)) || (i == 10 && j == 11)){
+          well[i][j] = 1;
+        }
+        else{
+          if (Math.random() <= boxprob){
+            well[i][j]=0;
           }
           else{
-            if (Math.random() <= boxprob){
-              well[i][j]=0;
-            }
-            else{
-              well[i][j]=1;
-            }
-           // well[i][j] = 1;
+            well[i][j]=1;
           }
+         // well[i][j] = 1;
         }
       }
-      repaint();
     }
+    repaint();
+  }
   public static void actions(){
     //KEYLISTENER
     frame.addKeyListener(new KeyListener() {
@@ -229,25 +241,25 @@ public class Bman extends JPanel{
     }
   }
   public static void nextStep(int xPos, int yPos, BmanPlayers player){
+    int wellValue = well[xPos][yPos];
     BmanPlayers.setPos(player, xPos, yPos);
-    if(!BmanPlayers.getInvincibility(player) && (well[xPos][yPos] == 5 || well[xPos][yPos] == 6)){
+    if(!BmanPlayers.getInvincibility(player) && (wellValue == 12 || wellValue == 13 || wellValue == 14 || wellValue == 15)){
       BmanPlayers.loseLife(player);
     }
-    else if(well[xPos][yPos] == 7){
+    else if(wellValue == 7){
       if(BmanPlayers.getMaxBombs(player) <=6){
         BmanPlayers.addMaxBombs(player);
         BmanPlayers.addBombs(player);
       }
       well[xPos][yPos] = 1;
     }
-    else if(well[xPos][yPos] == 8){
+    else if(wellValue == 8){
       if(BmanPlayers.getexplodeSize(player) <=6){
         BmanPlayers.addExplodeSize(player, 1);
-
       }
       well[xPos][yPos] = 1;
     }
-    else if(well[xPos][yPos] == 9){
+    else if(wellValue == 9){
       if(BmanPlayers.getLives(player) <= 4){
         BmanPlayers.addLives(player);
       }
@@ -255,7 +267,36 @@ public class Bman extends JPanel{
     }
   }
   public void explode(BmanPlayers player, int x, int y, int e){
-    sound();
+    String soundID = "";
+    if(player == playerOne){
+      if(BmanPlayers.getChar(playerOne).equals("Tyler")){
+        soundID += "tylerSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerOne).equals("Kumar")){
+        soundID += "kumarSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerOne).equals("Obama")){
+        soundID += "obamaSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerOne).equals("Trump")){
+        soundID += "trumpSound.wav";
+      }
+    }
+    else if(player == playerTwo){
+      if(BmanPlayers.getChar(playerTwo).equals("Tyler")){
+        soundID += "tylerSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerTwo).equals("Kumar")){
+        soundID += "kumarSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerTwo).equals("Obama")){
+        soundID += "obamaSound.wav";
+      }
+      else if(BmanPlayers.getChar(playerTwo).equals("Trump")){
+        soundID += "trumpSound.wav";
+      }
+    }
+    sound(soundID);
     int p1x = BmanPlayers.getxPos(playerOne);
     int p1y = BmanPlayers.getyPos(playerOne);
     int p2x = BmanPlayers.getxPos(playerTwo);
@@ -580,11 +621,11 @@ public class Bman extends JPanel{
       g.drawImage(redb, units*unitSize+50, unitSize*(i+5), unitSize, unitSize, null);
     }
     if(BmanPlayers.getLives(playerOne) <= 0){
-      endGame(g, playerOne);
+      endGame(g, playerTwo);
       return;
     }
     else if(BmanPlayers.getLives(playerTwo) <= 0){
-      endGame(g, playerTwo);
+      endGame(g, playerOne);
       return;
     }
   }
@@ -614,13 +655,44 @@ public class Bman extends JPanel{
     g.drawString("Game Over",(int) (units*unitSize*0.15), (int) (units*unitSize*0.25));
     String winner = "";
     if(player == playerOne){
-      winner += character2 + " Wins";
+      winner += BmanPlayers.getChar(playerOne) + " Wins";
     }
     else if(player == playerTwo){
-      winner += character1 + " Wins";
+      winner += BmanPlayers.getChar(playerTwo) + " Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
     // menu.render();
+  }
+  public static void restrictMap(){
+    int p1x;
+    int p1y;
+    int p2x;
+    int p2y;
+    new Thread() {
+      @Override public void run() {
+        try{
+          for(int i = 0; i <5; i ++){
+            for(int j = i; j < 10-i; j++){
+              if(well[BmanPlayers.getxPos(playerOne)][BmanPlayers.getyPos(playerOne)] == 2){
+                BmanPlayers.setLives(playerOne, 0);
+              }
+              else if(well[BmanPlayers.getxPos(playerTwo)][BmanPlayers.getyPos(playerTwo)] == 2){
+                BmanPlayers.setLives(playerTwo, 0);
+              }
+              well[j+1][i+1] = 2;
+              well[11-i][j+1] = 2;
+              well[11-j][11-i] = 2;
+              well[i+1][11-j] = 2;
+              game.repaint();
+              Thread.sleep(1000);
+            }
+          }
+        }catch(InterruptedException e){
+          e.printStackTrace();
+        }
+      }
+    }.start();
+
   }
   public static int RNGESUS(BmanPlayers player, int bombRay){
     int roll = (int)(100*Math.random());
@@ -637,8 +709,8 @@ public class Bman extends JPanel{
       return bombRay;
     }
   }
-  public void sound(){
-    File yourFile = new File("pta.wav");
+  public void sound(String file){
+    File yourFile = new File(file);
     AudioInputStream stream;
     AudioFormat format;
     DataLine.Info info;

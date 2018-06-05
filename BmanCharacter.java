@@ -70,31 +70,33 @@ public class BmanCharacter extends Bman{
     backButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0) {
-        character1 = combo1.getItemAt(combo1.getSelectedIndex());
-        character2 = combo2.getItemAt(combo2.getSelectedIndex());
+        BmanPlayers.setChar(playerOne, combo1.getItemAt(combo1.getSelectedIndex()));
+        BmanPlayers.setChar(playerTwo, combo2.getItemAt(combo2.getSelectedIndex()));
+        System.out.println(BmanPlayers.getChar(playerOne));
+        System.out.println(BmanPlayers.getChar(playerTwo));
         try{
-          if(character1.equals("Tyler")){
+          if(BmanPlayers.getChar(playerOne).equals("Tyler")){
             pyr1 = ImageIO.read(new File("tyler.png"));
           }
-          else if(character1.equals("Kumar")){
+          else if(BmanPlayers.getChar(playerOne).equals("Kumar")){
             pyr1 = ImageIO.read(new File("kumz2.png"));
           }
-          else if(character1.equals("Trump")){
+          else if(BmanPlayers.getChar(playerOne).equals("Trump")){
             pyr1 = ImageIO.read(new File("trump.png"));
           }
-          else if(character1.equals("Obama")){
+          else if(BmanPlayers.getChar(playerOne).equals("Obama")){
             pyr1 = ImageIO.read(new File("obama.png"));
           }
-          if(character2.equals("Tyler")){
+          if(BmanPlayers.getChar(playerTwo).equals("Tyler")){
             pyr2 = ImageIO.read(new File("tyler.png"));
           }
-          else if(character2.equals("Kumar")){
+          else if(BmanPlayers.getChar(playerTwo).equals("Kumar")){
             pyr2 = ImageIO.read(new File("kumz2.png"));
           }
-          else if(character2.equals("Obama")){
+          else if(BmanPlayers.getChar(playerTwo).equals("Obama")){
             pyr2 = ImageIO.read(new File("obama.png"));
           }
-          else if(character2.equals("Trump")){
+          else if(BmanPlayers.getChar(playerTwo).equals("Trump")){
             pyr2 = ImageIO.read(new File("trump.png"));
           }
         }catch(IOException e) {

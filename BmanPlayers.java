@@ -7,6 +7,7 @@ public class BmanPlayers{
   protected int maxBombs;
   protected boolean invincible;
   protected boolean canDrop;
+  protected String character;
   public BmanPlayers(){
     xPos = 0;
     yPos = 0;
@@ -16,6 +17,13 @@ public class BmanPlayers{
     maxBombs = 3;
     invincible = false;
     canDrop = true;
+    character = "";
+  }
+  public static void setChar(BmanPlayers player, String name){
+    player.character = name;
+  }
+  public static String getChar(BmanPlayers player){
+    return player.character;
   }
   public static void setPos(BmanPlayers player, int x, int y){
     player.xPos = x;
