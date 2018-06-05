@@ -1,3 +1,4 @@
+// Victor Jann, Shivam Misra, Sarvesh Mayilvahanan
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ public class BmanCharacter extends Bman{
     Font myFont = new Font("Times New Roman", Font.PLAIN, 15);
     JPanel characterPanel = new JPanel();
 
+    // array of possible characters
     String[] chars1 = new String[] {"Tyler", "Kumar", "Obama", "Trump"};
     String[] chars2 = new String[] {"Kumar", "Tyler", "Obama", "Trump"};
     JComboBox<String> combo1 = new JComboBox<>(chars1);
@@ -30,6 +32,7 @@ public class BmanCharacter extends Bman{
     // combo1.addItem("Trump");
     characterPanel.setLayout(new BoxLayout(characterPanel, BoxLayout.PAGE_AXIS));
 
+    // allow players to choose their characters
     JLabel title = new JLabel("Choose Your Character", SwingConstants.CENTER);
     characterPanel.add(Box.createVerticalStrut(70));
     title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -58,6 +61,7 @@ public class BmanCharacter extends Bman{
     characterPanel.add(Box.createVerticalStrut(30));
     characterPanel.add(combo2);
 
+    // allows players to return to the main menu
     JButton backButton = new JButton("back");
     characterPanel.add(Box.createVerticalStrut(100));
     backButton.setFont(myFont);
@@ -72,9 +76,7 @@ public class BmanCharacter extends Bman{
       public void actionPerformed(ActionEvent arg0) {
         BmanPlayers.setChar(playerOne, combo1.getItemAt(combo1.getSelectedIndex()));
         BmanPlayers.setChar(playerTwo, combo2.getItemAt(combo2.getSelectedIndex()));
-        System.out.println(BmanPlayers.getChar(playerOne));
-        System.out.println(BmanPlayers.getChar(playerTwo));
-        try{
+        try{ // sets the picture of each player's character
           if(BmanPlayers.getChar(playerOne).equals("Tyler")){
             pyr1 = ImageIO.read(new File("tyler.png"));
           }

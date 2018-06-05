@@ -1,3 +1,4 @@
+// Victor Jann, Shivam Misra, Sarvesh Mayilvahanan
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ public class Bmenu extends Bman{
     panel.setBounds(100, 100, 300, 200);
     panel.setBackground(Color.black);
 
+    // shows gif of title on main menu
     Icon icon = new ImageIcon("title.gif");
     JLabel title = new JLabel(icon, SwingConstants.CENTER);
     panel.add(Box.createVerticalStrut(50));
@@ -30,6 +32,7 @@ public class Bmenu extends Bman{
     title.setFont(titleFont);
     panel.add(title);
 
+    // creates start button to start game
     JButton startButton = new JButton("start");
     startButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(300));
@@ -41,6 +44,7 @@ public class Bmenu extends Bman{
 
     panel.add(startButton);
 
+    // creates help button to show controls, powerups
     JButton helpButton = new JButton("help");
     helpButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
@@ -50,6 +54,7 @@ public class Bmenu extends Bman{
     helpButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(helpButton);
 
+    // creates quit button that allows players to exit
     JButton quitButton = new JButton("quit");
     quitButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
@@ -59,6 +64,7 @@ public class Bmenu extends Bman{
     quitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
     panel.add(quitButton);
 
+    // creates character button that allows players to pick characters
     JButton characterButton = new JButton("character");
     characterButton.setFocusable(false);
     panel.add(Box.createVerticalStrut(5));
@@ -70,7 +76,6 @@ public class Bmenu extends Bman{
 
     panel.setVisible(true);
     con.add(panel);
-    // frame.add(startButton, BorderLayout.NORTH);
 
 		startButton.addActionListener(new ActionListener() {
 			@Override

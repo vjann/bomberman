@@ -1,3 +1,4 @@
+// Victor Jann, Shivam Misra, Sarvesh Mayilvahanan
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,6 +19,7 @@ import javax.swing.Timer;
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for breakable boxes, 1 for pathway for movement (black),
   // 2 for wall (gray), 3 for bomb P1, 4 for bomb P2, 12 p1 explosion horiz, 13 p1 explosion vert, 14 is p2 explosion horiz, 15 is p2 explosion vert
+  // Initializing variables and objects
   protected static int units = 13;//each square is a units
   protected static int unitSize = 50;//size of each square
   public static BmanPlayers playerOne = new BmanPlayers();
@@ -46,6 +48,7 @@ public class Bman extends JPanel{
   private static AlphaComposite trans = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
 
   public static void main(String[] args){
+    // create frame for game
     frame = new JFrame("BomberMan!");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize((units+2)*unitSize, units*unitSize);//size of whole frame, which is # of squares times its size
@@ -55,7 +58,7 @@ public class Bman extends JPanel{
     BmanPlayers.setChar(playerOne, "Tyler");
     BmanPlayers.setChar(playerTwo, "Kumar");
 
-    try {
+    try { //initialize pictures
       pyr1 = ImageIO.read(new File("tyler.png"));
       pyr2 = ImageIO.read(new File("kumz2.png"));
       redb = ImageIO.read(new File("redbomb.png"));
@@ -74,7 +77,7 @@ public class Bman extends JPanel{
     menu.render();
     frame.setVisible(true);
   }
-  public void init(){//initialize game,       //CHANGED
+  public void init(){//initialize game
     Timer t = new Timer(1000*60, new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent e){
@@ -108,7 +111,7 @@ public class Bman extends JPanel{
     repaint();
   }
   public static void actions(){
-    //KEYLISTENER
+    // creates keylistener for movement and attacks
     frame.addKeyListener(new KeyListener() {
       public void keyTyped(KeyEvent e) {
       }
@@ -162,6 +165,7 @@ public class Bman extends JPanel{
             }
           }.start();
         }
+        // function to place breakable box, recharges every 3 seconds
         else if(e.getKeyCode() == KeyEvent.VK_BACK_SLASH && BmanPlayers.getCanDrop(playerOne)){
           well[p1x][p1y] = 0;
           new Thread() {
@@ -177,7 +181,7 @@ public class Bman extends JPanel{
           }.start();
         }
         game.repaint();
-        // player two (WASD)
+        // player two (WASD), same movement concept
         if(e.getKeyCode() == KeyEvent.VK_W && (well[p2x][p2y-1] == 1 || well[p2x][p2y-1] >=5)){
           nextStep(p2x, p2y-1, playerTwo);
         }
@@ -190,6 +194,7 @@ public class Bman extends JPanel{
         else if(e.getKeyCode() == KeyEvent.VK_D && (well[p2x+1][p2y] == 1 || well[p2x+1][p2y] >=5)){
           nextStep(p2x+1, p2y, playerTwo);
         }
+        // same bomb concept
         else if(e.getKeyCode() == KeyEvent.VK_T && (BmanPlayers.getBombs(playerTwo) > 0)){
           new Thread() {
             @Override public void run() {
@@ -217,6 +222,7 @@ public class Bman extends JPanel{
             }
           }.start();
         }
+        // same breakable box concept
         else if(e.getKeyCode() == KeyEvent.VK_Y && BmanPlayers.getCanDrop(playerTwo)){
           well[p2x][p2y] = 0;
           new Thread() {
@@ -240,6 +246,7 @@ public class Bman extends JPanel{
       return;
     }
   }
+  // function to determine if players lose life, make appropriate changes for powerups
   public static void nextStep(int xPos, int yPos, BmanPlayers player){
     int wellValue = well[xPos][yPos];
     BmanPlayers.setPos(player, xPos, yPos);
@@ -266,6 +273,7 @@ public class Bman extends JPanel{
       well[xPos][yPos] = 1;
     }
   }
+  // explode function for bombs with respective character sounds
   public void explode(BmanPlayers player, int x, int y, int e){
     String soundID = "";
     if(player == playerOne){
@@ -358,7 +366,8 @@ public class Bman extends JPanel{
         well[x][y + i] = 15;
       }
     }
-    //next three for loops are the same but in dif. direction. Check comments for the first for loop for clarifications
+    //next three for loops are the same but in dif. directions
+    //explodes boxes around bomb, breaks breakable boxes and stops at unbreakable boxes
     for(int j = 1; j < e; j++){
       if(well[x][y-j] == 0 || well[x][y-j] == 2 || well[x][y-j] == 3 || well[x][y-j] == 4){
         if(well[x][y-j] == 3 || well[x][y-j] == 4){
@@ -515,7 +524,7 @@ public class Bman extends JPanel{
     //paint the changes that were made above
     repaint();
   }
-  public void paintComponent(Graphics g){
+  public void paintComponent(Graphics g){ // main paint function
     Graphics2D g2 = (Graphics2D)g;
     //sets up icons and images of players, bombs, maybe bombrays
     g.setColor(Color.white);
@@ -597,6 +606,7 @@ public class Bman extends JPanel{
       g.setColor(Color.black);
       }
     }
+    // paints side panels that keep track of lives and number of bombs
     g.fillRect(0, 0, 50, units*unitSize);
     g.fillRect(units*unitSize+50, 0, 50, units*unitSize);
     for(int i = 0; i < BmanPlayers.getLives(playerTwo); i ++){
@@ -633,7 +643,7 @@ public class Bman extends JPanel{
   public static void bombReset(){
     //goes through entire well, turns bomb rays (12-15) to background (1)
     /* BUG: if two bombs placed in rapid succession, erasing first bomb ray by the timer
-    will erase all other current bomb rays before their times is up
+    will erase all other current bomb rays before their timer is up
     */
     for(int i = 1; i < units-1; i++){
       for(int j = 1; j < units-1; j++){
@@ -643,6 +653,7 @@ public class Bman extends JPanel{
       }
     }
   }
+  // when one player loses, displays the winner and ends the game
   public void endGame(Graphics g, BmanPlayers player){
     Graphics2D g2 = (Graphics2D)g;
     alpha = (float) 1; //draw half transparent
@@ -663,6 +674,7 @@ public class Bman extends JPanel{
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
     // menu.render();
   }
+  // after a set period of time and players are still alive, map begins to shrink and force players inward
   public static void restrictMap(){
     int p1x;
     int p1y;
@@ -692,8 +704,8 @@ public class Bman extends JPanel{
         }
       }
     }.start();
-
   }
+  // function that randomly assigns power ups with set probabilities
   public static int RNGESUS(BmanPlayers player, int bombRay){
     int roll = (int)(100*Math.random());
     if(roll < 10){
@@ -709,6 +721,7 @@ public class Bman extends JPanel{
       return bombRay;
     }
   }
+  // function that plays a sound based on a file
   public void sound(String file){
     File yourFile = new File(file);
     AudioInputStream stream;
@@ -726,6 +739,7 @@ public class Bman extends JPanel{
       e.printStackTrace();
     }
   }
+  // plays background music while the game is running
   public static void backgroundMusic(){
     File yourFile = new File("smash.wav");
     AudioInputStream stream;

@@ -1,3 +1,4 @@
+// Victor Jann, Shivam Misra, Sarvesh Mayilvahanan
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +26,7 @@ public class Bhelp extends Bman{
     }catch(IOException e){
       e.printStackTrace();
     }
+    // adds instructions and controls for players
     backPanel.add(background);
     con.add(backPanel);
     JLabel controls = new JLabel("<html><pre>CONTROLS\nPlayer 1: Arrow Keys to move, ENTER to drop bombs, \\ to add obstacle\nPlayer 2: WASD to move, T to drop bombs, Y to add obstacle</pre></html>");
@@ -32,6 +34,7 @@ public class Bhelp extends Bman{
     controls.setFont(myFont);
     instructions.setFont(myFont);
 
+    // creates button to return to main menu
     JButton backButton = new JButton("back");
     backButton.setFont(myFont);
     backButton.setFocusable(false);
