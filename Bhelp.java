@@ -19,7 +19,6 @@ public class Bhelp extends Bman{
   public void helpMenu(){
     Font myFont = new Font("Times New Roman", Font.PLAIN, 15);
     JPanel helpPanel = new JPanel();
-    JPanel backPanel = new JPanel();
     JLabel background = new JLabel();
     try{
       background = new JLabel(new ImageIcon(ImageIO.read(new File("helpmenu.png"))));
@@ -27,10 +26,9 @@ public class Bhelp extends Bman{
       e.printStackTrace();
     }
     // adds instructions and controls for players
-    backPanel.add(background);
-    con.add(backPanel);
+
     JLabel controls = new JLabel("<html><pre>CONTROLS\nPlayer 1: Arrow Keys to move, ENTER to drop bombs, \\ to add obstacle\nPlayer 2: WASD to move, T to drop bombs, Y to add obstacle</pre></html>");
-    JLabel instructions = new JLabel("<html><pre>OBJECTIVE: reduce opponent's lives to zero using bombs\nPowerups: increase bomb range, increase max bomb capacity</pre></html>");
+    JLabel instructions = new JLabel("<html><pre>SYNOPSIS:\nThere are 2 players in a grid playing field filled with breakable\n and unbreakable obstacles. The players drop bombs that on explosion,\n will break boxes and kill players. \nThe players start off with 3 bombs and 3 lives each,\n and the last player standing wins.\n The breakable boxes also have the potential to contain power ups.\nPOWERUPS:</pre></html>");
     controls.setFont(myFont);
     instructions.setFont(myFont);
 
@@ -38,10 +36,10 @@ public class Bhelp extends Bman{
     JButton backButton = new JButton("back");
     backButton.setFont(myFont);
     backButton.setFocusable(false);
-
     helpPanel.add(controls);
     helpPanel.add(instructions);
     helpPanel.add(backButton);
+    helpPanel.add(background);
     helpPanel.setOpaque(false);
     con.add(helpPanel);
     helpPanel.setVisible(true);

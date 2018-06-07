@@ -15,6 +15,7 @@ import java.awt.AlphaComposite;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
+import java.awt.event.WindowEvent;
 
 public class Bman extends JPanel{
   protected static int[][] well;//a reference of type for each unit: 0 for breakable boxes, 1 for pathway for movement (black),
@@ -81,7 +82,6 @@ public class Bman extends JPanel{
     Timer t = new Timer(1000*60, new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent e){
-        System.out.println("hi");
         restrictMap();
         ((Timer)e.getSource()).stop();
       }
@@ -669,7 +669,6 @@ public class Bman extends JPanel{
       winner += BmanPlayers.getChar(playerTwo) + " Wins";
     }
     g.drawString(winner,(int) (units*unitSize*0.15), (int) (units*unitSize*0.75));
-    // menu.render();
   }
   // after a set period of time and players are still alive, map begins to shrink and force players inward
   public static void restrictMap(){
@@ -697,6 +696,8 @@ public class Bman extends JPanel{
               Thread.sleep(1000);
             }
           }
+          String[] args = {};
+          main(args);
         }catch(InterruptedException e){
           e.printStackTrace();
         }
