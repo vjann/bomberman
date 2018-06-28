@@ -310,6 +310,34 @@ public class Bman extends JPanel{
     int p2x = BmanPlayers.getxPos(playerTwo);
     int p2y = BmanPlayers.getyPos(playerTwo);
     int bombRay = -1;
+    if(x == p1x && y == p1y && !BmanPlayers.getInvincibility(playerOne)){
+      BmanPlayers.loseLife(playerOne);
+      new Thread() {
+        @Override public void run() {
+          try {
+            BmanPlayers.setInvinciblility(playerOne, true);
+            Thread.sleep(1000);
+            BmanPlayers.setInvinciblility(playerOne, false);
+          }catch(InterruptedException e){
+            e.printStackTrace();
+          }
+        }
+      }.start();
+    }
+    else if(x == p2x && y == p2y && !BmanPlayers.getInvincibility(playerTwo)){
+      BmanPlayers.loseLife(playerTwo);
+      new Thread() {
+        @Override public void run() {
+          try {
+            BmanPlayers.setInvinciblility(playerTwo, true);
+            Thread.sleep(1000);
+            BmanPlayers.setInvinciblility(playerTwo, false);
+          }catch(InterruptedException e){
+            e.printStackTrace();
+          }
+        }
+      }.start();
+    }
     //check units in all four directions up to radius e, sets well to explosions unless hits wall
     //BUG: bomb ray does not include bombs origin
     for(int i = 1 ; i < e; i++){
