@@ -15,9 +15,9 @@ These blocks are placed on set positions on the intersections of every odd numbe
 These blocks are randomly placed around the map, except for on top of the non-breakable blocks. There is also a gap at the spawn point of both the players to allow for the players to safely get out of their initial position. This also uses the “well” 2D array to work, and breaks when in range of an explosion from a bomb. As soon as the explosion reaches a breakable block, the explosion does not continue to its max range (if not on max range at impact with the breakable block) , but breaks the breakable block it hits.
 
 **Powerups**
-Powerups include: gain an extra life, increase number of bombs held, increase bomb's explosion size. The extra life powerup has a 5% probability of occurring. The add bomb powerup has a 10% probability of occurring. The increase bomb size has a 10% probability of occurring.
+Powerups include: gain an extra life, increase number of bombs held, increase bomb's explosion size. The extra life powerup has a 5% probability of occurring. The add bomb powerup has a 10% probability of occurring. The increase bomb size has a 10% probability of occurring.\
 
-**Screen Grabs**
+**Screen Grabs**\
 ![Home Screen](/readme_pics/menu.png)
 ![Game Play 1](/readme_pics/gameplay0.png)
 ![Game Play 2](/readme_pics/gameplay1.png)
