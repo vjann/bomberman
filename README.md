@@ -1,4 +1,4 @@
-# kumz
+# BomberMan
 **Synopsis**
 Based on the classic NES game BomberMan, there are 2 players in a grid playing field filled with breakable and unbreakable obstacles. The players can drop bombs that on explosion, will break boxes and kill players. The players start off with 3 bombs and 3 lives each, and the last player standing wins. The breakable boxes also have the potential to contain power ups that give the player unique abilities such as a larger explosion range for their bombs. The field of breakable boxes and positions of power ups within the field will be randomly generated so that no two games are similar.
 
@@ -17,5 +17,9 @@ These blocks are randomly placed around the map, except for on top of the non-br
 **Powerups**
 Powerups include: gain an extra life, increase number of bombs held, increase bomb's explosion size. The extra life powerup has a 5% probability of occurring. The add bomb powerup has a 10% probability of occurring. The increase bomb size has a 10% probability of occurring.
 
-``asdflkjdf``
-**asdf**
+**Screen Grabs**
+![Home Screen](/readme_pics/menu.png)
+![Game Play](/readme_pics/gameplay0.png)
+![Game Play](/readme_pics/gameplay1.png)
+![Help](/readme_pics/help.png)
+![Character Select](/readme_pics/character.png)
