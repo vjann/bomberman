@@ -19,7 +19,7 @@ Powerups include: gain an extra life, increase number of bombs held, increase bo
 
 **Screen Grabs**
 ![Home Screen](/readme_pics/menu.png)
-![Game Play](/readme_pics/gameplay0.png)
-![Game Play](/readme_pics/gameplay1.png)
+![Game Play 1](/readme_pics/gameplay0.png)
+![Game Play 2](/readme_pics/gameplay1.png)
 ![Help](/readme_pics/help.png)
 ![Character Select](/readme_pics/character.png)
